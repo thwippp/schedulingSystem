@@ -1,2 +1,2 @@
-# schedulingSytem
+# schedulingSystem
 WGU Software II
