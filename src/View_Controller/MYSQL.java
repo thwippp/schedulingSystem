@@ -17,10 +17,7 @@ import javafx.collections.ObservableList;
  *
  * @author bscha
  */
-
-
 // TODO-- DOES THIS HAVE TO BE STATIC?
-
 public class MYSQL {
 
     // Connection credentials
@@ -127,7 +124,6 @@ public class MYSQL {
         }
         return con;
     }
-    
 
     public static int getColumnCount(ResultSet resultSet) throws SQLException {
         return resultSet.getMetaData().getColumnCount();
@@ -153,7 +149,5 @@ public class MYSQL {
     public static void setTable(ObservableList<ArrayList> table) {
         MYSQL.table = table;
     }
-    
-    
 
 }

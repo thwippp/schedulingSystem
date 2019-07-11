@@ -38,7 +38,7 @@ public class ReportScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+
         reportChoiceBox.getItems().addAll("number of appointment types by month",
                 "the schedule for each consultant",
                 "one additional report of your choice");

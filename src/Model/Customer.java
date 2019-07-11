@@ -23,7 +23,6 @@ public class Customer {
     private String postalCode;
     private String phone;
 
-
     public Customer(String customerId, String customerName, String active, String address, String address2, String city, String country, String postalCode, String phone) {
         this.customerId = customerId;
         this.customerName = customerName;
@@ -35,7 +34,7 @@ public class Customer {
         this.postalCode = postalCode;
         this.phone = phone;
     }
-    
+
     public Customer(ArrayList<String> arrayList) {
         this.customerId = arrayList.get(0);
         this.customerName = arrayList.get(1);

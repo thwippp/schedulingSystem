@@ -38,7 +38,7 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private TextField customerIdTextField;
-    
+
     @FXML
     private TextField customerNameTextField;
 
@@ -68,7 +68,7 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private Button cancelButton;
-    
+
     @FXML
     private Button updateButton;
 
@@ -107,9 +107,8 @@ public class CustomerScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         // FAKE TEST DATA DELETE ME
-        
         customerNameTextField.setText("Rebecca");
         activeRadioButton.selectedProperty().set(true);
         addressTextField.setText("address");
@@ -167,22 +166,22 @@ public class CustomerScreenController implements Initializable {
 
         boolean result = false;
         try {
-        CallableStatement cs = null;
-        String q = "{Call InsertNewCustomer(?,?,?,?,?,?,?,?)}";
-        Connection conn = MYSQL.getConnection();
-        cs = conn.prepareCall(q);
-        cs.setString(1, cu);
-        cs.setBoolean(2, acrb);
-        cs.setString(3, ad);
-        cs.setString(4, ad2);
-        cs.setString(5, ci);
-        cs.setString(6, co);
-        cs.setString(7, po);
-        cs.setString(8, ph);
-        
-        cs.executeQuery();  // could change this
-        conn.close();
-      
+            CallableStatement cs = null;
+            String q = "{Call InsertNewCustomer(?,?,?,?,?,?,?,?)}";
+            Connection conn = MYSQL.getConnection();
+            cs = conn.prepareCall(q);
+            cs.setString(1, cu);
+            cs.setBoolean(2, acrb);
+            cs.setString(3, ad);
+            cs.setString(4, ad2);
+            cs.setString(5, ci);
+            cs.setString(6, co);
+            cs.setString(7, po);
+            cs.setString(8, ph);
+
+            cs.executeQuery();  // could change this
+            conn.close();
+
         } catch (SQLException ex) {
             Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
@@ -214,10 +213,10 @@ public class CustomerScreenController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     @FXML
-    private void tableViewSelectionAction(){
-         Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+    private void tableViewSelectionAction() {
+        Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
 
         customerIdTextField.setText(selectedCustomer.getCustomerId());
 
@@ -226,7 +225,7 @@ public class CustomerScreenController implements Initializable {
         int a = Integer.valueOf(selectedCustomer.isActive());
         active = a > 0;
         System.out.println(a);
-        
+
         activeRadioButton.setSelected(active);
         addressTextField.setText(selectedCustomer.getAddress());
         address2TextField.setText(selectedCustomer.getAddress2());
@@ -235,11 +234,10 @@ public class CustomerScreenController implements Initializable {
         postalCodeTextField.setText(selectedCustomer.getPostalCode());
         phoneTextField.setText(selectedCustomer.getPhone());
     }
-    
+
     @FXML
-    private void updateButtonAction(){
-       
-        
+    private void updateButtonAction() {
+
         //TODO-- after you press update, update the selected customer in the DB
         //Todo-- currently have the button and the table set to populate the fields on the left
     }

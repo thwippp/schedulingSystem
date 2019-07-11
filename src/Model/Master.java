@@ -15,8 +15,6 @@ import javafx.collections.ObservableList;
 public class Master {
 
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-    
-    
 
     public static void addCustomer(Customer customer) {
         allCustomers.add(customer);
@@ -25,8 +23,8 @@ public class Master {
     public static void deleteCustomer(Customer customer) {
         allCustomers.remove(customer);
     }
-    
-    public static void deleteAllCustomers(){
+
+    public static void deleteAllCustomers() {
         allCustomers.clear();
     }
 

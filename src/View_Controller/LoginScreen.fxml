@@ -12,31 +12,31 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.LoginScreenController">
-   <children>
-      <BorderPane prefHeight="450.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <center>
-            <VBox alignment="CENTER" fillWidth="false" spacing="10.0" stylesheets="@Style.css" BorderPane.alignment="CENTER">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
-                     <font>
-                        <Font name="Roboto" size="30.0" />
-                     </font>
-                  </Text>
-                  <Separator focusTraversable="false" orientation="VERTICAL" visible="false" VBox.vgrow="NEVER" />
-                  <Label text="Username" />
-                  <TextField fx:id="usernameTextField" alignment="CENTER" promptText="Enter username" />
-                  <Label text="Password" />
-                  <TextField fx:id="passwordTextField" alignment="CENTER" promptText="Enter password" />
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" text="Log In" />
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </VBox>
-         </center>
-      </BorderPane>
-   </children>
+    <children>
+        <BorderPane prefHeight="450.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+                <VBox alignment="CENTER" fillWidth="false" spacing="10.0" stylesheets="@Style.css" BorderPane.alignment="CENTER">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
+                            <font>
+                                <Font name="Roboto" size="30.0" />
+                            </font>
+                        </Text>
+                        <Separator focusTraversable="false" orientation="VERTICAL" visible="false" VBox.vgrow="NEVER" />
+                        <Label text="Username" />
+                        <TextField fx:id="usernameTextField" alignment="CENTER" promptText="Enter username" />
+                        <Label text="Password" />
+                        <TextField fx:id="passwordTextField" alignment="CENTER" promptText="Enter password" />
+                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" text="Log In" />
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                </VBox>
+            </center>
+        </BorderPane>
+    </children>
 </AnchorPane>

@@ -20,12 +20,12 @@ public class SchedulingBrianSchaffeld extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        
+
         Parent root = FXMLLoader.load(getClass().getResource("/View_Controller/LoginScreen.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        
+
         stage.setTitle("Scheduling System || Brian Schaffeld || ID# 000790777");
         stage.getIcons().add(new Image("/Model/calendar.png"));
     }

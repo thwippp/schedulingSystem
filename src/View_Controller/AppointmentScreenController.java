@@ -60,7 +60,7 @@ public class AppointmentScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+
         boolean result = false;
         try {
             result = MYSQL.query("Select * from appointment");
@@ -68,8 +68,8 @@ public class AppointmentScreenController implements Initializable {
             Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(result);
-        
-    }    
+
+    }
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws IOException {
@@ -101,5 +101,5 @@ public class AppointmentScreenController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    
+
 }

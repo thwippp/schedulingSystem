@@ -59,14 +59,14 @@ public class User {
     }
 
     public static void matchUserOnUsername(String username) throws SQLException {
-        
+
         String sql = "select userId, userName, password, active from user \n"
                 + "where username = 'test'\n"
                 + "limit 1;";
         boolean result = MYSQL.query(sql);
-        
+
         System.out.println(MYSQL.getTable());
-        
+
     }
 
 }

@@ -54,7 +54,7 @@ public class LoginScreenController implements Initializable {
 
         // Get Password
         String password = passwordTextField.getText();
-        
+
         // Match on username
         User.matchUserOnUsername(username);
 
