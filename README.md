@@ -1,2 +1,0 @@
-# schedulingSystem
-WGU Software II
