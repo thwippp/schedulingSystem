@@ -5,16 +5,20 @@
  */
 package View_Controller;
 
+import Model.MYSQL;
 import Model.Customer;
+import Model.DBConnection;
 import Model.Master;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -108,15 +112,28 @@ public class CustomerScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // FAKE TEST DATA DELETE ME
-        customerNameTextField.setText("Rebecca");
+        ObservableList<ArrayList> result = null;
+        try {
+            String sql = "SELECT Auto_increment FROM information_schema.tables WHERE table_name='customer'";
+            result = new MYSQL().query(sql);
+            
+            String cId = result.get(0).get(0).toString();  // maybe not
+            customerIdTextField.setText(cId);
+            
+            System.out.println(result);
+        } catch (Exception ex) {
+            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+        
+        customerNameTextField.setText("Brian Schaffeld");
         activeRadioButton.selectedProperty().set(true);
-        addressTextField.setText("address");
-        address2TextField.setText("address2");
-        cityTextField.setText("city");
-        countryTextField.setText("country");
-        postalCodeTextField.setText("postalcode");
-        phoneTextField.setText("phone");
+        addressTextField.setText("4129 Winners Circle Ave SE");
+        address2TextField.setText("");
+        cityTextField.setText("Albany");
+        countryTextField.setText("USA");
+        postalCodeTextField.setText("97322");
+        phoneTextField.setText("5419086580");
 
         // Cleans out customer list so that the query can re-populate it
         Master.deleteAllCustomers();
@@ -132,21 +149,21 @@ public class CustomerScreenController implements Initializable {
         postalCodeTableColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         countryTableColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
         phoneTableColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-
-        boolean result = false;
-        //            result = MYSQL.query("Select * from customer");
-//            String q = "call customerinfo";
-        String q = "Call CustomerTableView";
+        
+        boolean isAdded = false;
         try {
-            result = MYSQL.addCustomersFromQuery(q);
-        } catch (SQLException ex) {
-            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            String sql = "Call CustomerTableView";
+            isAdded = new MYSQL().addCustomersFromQuery(sql);
+            System.out.println(isAdded);
+        } catch (Exception ex) {
+            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
         }
-
+        
     }
 
     @FXML
-    private void saveButtonAction(ActionEvent event) throws IOException, SQLException {
+    private void saveButtonAction(ActionEvent event) throws IOException, SQLException, Exception {
         //TODO-- add textfield values to database, update tableview, then go to mainscreen
 
         String cu = customerNameTextField.getText();
@@ -168,7 +185,7 @@ public class CustomerScreenController implements Initializable {
         try {
             CallableStatement cs = null;
             String q = "{Call InsertNewCustomer(?,?,?,?,?,?,?,?)}";
-            Connection conn = MYSQL.getConnection();
+            Connection conn = DBConnection.getConnection();
             cs = conn.prepareCall(q);
             cs.setString(1, cu);
             cs.setBoolean(2, acrb);
@@ -224,7 +241,7 @@ public class CustomerScreenController implements Initializable {
         boolean active;
         int a = Integer.valueOf(selectedCustomer.isActive());
         active = a > 0;
-        System.out.println(a);
+//        System.out.println(a);
 
         activeRadioButton.setSelected(active);
         addressTextField.setText(selectedCustomer.getAddress());

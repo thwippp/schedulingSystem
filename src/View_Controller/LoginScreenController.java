@@ -5,11 +5,15 @@
  */
 package View_Controller;
 
-import Model.User;
+import Model.MYSQL;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,8 +61,20 @@ public class LoginScreenController implements Initializable {
         String password = passwordPasswordField.getText();
         
         // Match on username
-        User.matchUserOnUsername(username);
-
+        ObservableList<ArrayList> result = null;
+        try {
+            String sql = "select userId, userName, password, active from user \n"
+                + "where username = '" + username + "'\n"
+                + "limit 1;";
+            result = new MYSQL().query(sql);
+            System.out.println(result);
+        } catch (Exception ex) {
+            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+               
+        System.out.println(result.size());
+        
         // Switch scene to MainScreen
         Stage stage;
         Parent root;

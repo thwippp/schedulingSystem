@@ -33,30 +33,30 @@
                                 </Text>
                                 <Separator focusTraversable="false" orientation="VERTICAL" visible="false" />
                                 <Label text="Customer Id" />
-                                <TextField fx:id="customerIdTextField" promptText="CustomerId" />
+                                <TextField fx:id="customerIdTextField" alignment="CENTER" promptText="CustomerId" />
                                 <Label text="Customer Name" />
-                                <TextField fx:id="customerNameTextField" promptText="Customer Name" />
+                                <TextField fx:id="customerNameTextField" alignment="CENTER" promptText="Customer Name" />
                                 <RadioButton fx:id="activeRadioButton" mnemonicParsing="false" text="Active Customer" />
                                 <HBox spacing="10.0">
                                     <children>
                                         <VBox>
                                             <children>
                                                 <Label text="Address" />
-                                                <TextField fx:id="addressTextField" promptText="Address" />
+                                                <TextField fx:id="addressTextField" alignment="CENTER" promptText="Address" />
                                                 <Label text="Address 2" />
-                                                <TextField fx:id="address2TextField" promptText="Address 2" />
+                                                <TextField fx:id="address2TextField" alignment="CENTER" promptText="Address 2" />
                                                 <Label text="City" />
-                                                <TextField fx:id="cityTextField" promptText="City" />
+                                                <TextField fx:id="cityTextField" alignment="CENTER" promptText="City" />
                                             </children>
                                         </VBox>
                                         <VBox>
                                             <children>
                                                 <Label text="Country" />
-                                                <TextField fx:id="countryTextField" promptText="Country" />
+                                                <TextField fx:id="countryTextField" alignment="CENTER" promptText="Country" />
                                                 <Label text="Postal Code" />
-                                                <TextField fx:id="postalCodeTextField" promptText="Postal Code" />
+                                                <TextField fx:id="postalCodeTextField" alignment="CENTER" promptText="Postal Code" />
                                                 <Label text="Phone" />
-                                                <TextField fx:id="phoneTextField" promptText="Phone-(XXX) XXX-XXXX" />
+                                                <TextField fx:id="phoneTextField" alignment="CENTER" promptText="Phone-(XXX) XXX-XXXX" />
                                             </children>
                                         </VBox>
                                     </children>

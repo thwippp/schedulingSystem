@@ -27,7 +27,7 @@
                         <Label text="Username" />
                         <TextField fx:id="usernameTextField" alignment="CENTER" promptText="Enter username" />
                         <Label text="Password" />
-                  <PasswordField fx:id="passwordPasswordField" promptText="Enter password" />
+                  <PasswordField fx:id="passwordPasswordField" alignment="CENTER" onAction="#loginButtonAction" promptText="Enter password" />
                         <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" text="Log In" />
                     </children>
                     <padding>

@@ -5,8 +5,10 @@
  */
 package Model;
 
-import View_Controller.MYSQL;
+import Model.MYSQL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -14,59 +16,59 @@ import java.sql.SQLException;
  */
 public class User {
 
-    private static int userId;
-    private static String username;
-    private static String password;
-    private static boolean active;
+    private int userId;
+    private String username;
+    private String password;
+    private boolean active;
 
-    public User(String username, String password, boolean active) {
+    public User(int userId, String username, String password, boolean active) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.active = active;
     }
 
-    public static int getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public static void setUserId(int userId) {
-        User.userId = userId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public static String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public static void setUsername(String username) {
-        User.username = username;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public static String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public static void setPassword(String password) {
-        User.password = password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public static boolean isActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public static void setActive(boolean active) {
-        User.active = active;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public static void matchUserOnUsername(String username) throws SQLException {
+    public ObservableList<ArrayList> matchUserOnUsername(String username) throws Exception {
 
         String sql = "select userId, userName, password, active from user \n"
-                + "where username = 'test'\n"
+                + "where username = '" + username + "'\n"
                 + "limit 1;";
-        boolean result = MYSQL.query(sql);
-
-        System.out.println(MYSQL.getTable());
-
+ 
+        ObservableList<ArrayList> result = (ObservableList<ArrayList>) new MYSQL().query(sql);
+        System.out.println(result);
+        return result;
     }
 
 }

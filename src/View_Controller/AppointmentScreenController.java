@@ -5,12 +5,15 @@
  */
 package View_Controller;
 
+import Model.MYSQL;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,16 +62,16 @@ public class AppointmentScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
 
-        boolean result = false;
+        ObservableList<ArrayList> result = null;
         try {
-            result = MYSQL.query("Select * from appointment");
-        } catch (SQLException ex) {
+            String sql = "select * from appointment";
+            result = new MYSQL().query(sql);
+            System.out.println(result);
+        } catch (Exception ex) {
             Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
         }
-        System.out.println(result);
-
     }
 
     @FXML
