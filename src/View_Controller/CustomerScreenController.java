@@ -68,13 +68,19 @@ public class CustomerScreenController implements Initializable {
     private TextField phoneTextField;
 
     @FXML
-    private Button saveButton;
+    private Button addButton;
 
     @FXML
     private Button cancelButton;
 
     @FXML
     private Button updateButton;
+
+    @FXML
+    private Button deleteButton;
+
+    @FXML
+    private Button clearButton;
 
     @FXML
     private TableView<Customer> customerTableView;
@@ -116,16 +122,16 @@ public class CustomerScreenController implements Initializable {
         try {
             String sql = "SELECT Auto_increment FROM information_schema.tables WHERE table_name='customer'";
             result = new MYSQL().query(sql);
-            
+
             String cId = result.get(0).get(0).toString();  // maybe not
             customerIdTextField.setText(cId);
-            
+
             System.out.println(result);
         } catch (Exception ex) {
-            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-        
+
         customerNameTextField.setText("Brian Schaffeld");
         activeRadioButton.selectedProperty().set(true);
         addressTextField.setText("4129 Winners Circle Ave SE");
@@ -138,7 +144,7 @@ public class CustomerScreenController implements Initializable {
         // Cleans out customer list so that the query can re-populate it
         Master.deleteAllCustomers();
 
-        // Get list of products in Main Screen
+        // Get list of customers in CustomerScreen
         customerTableView.setItems(Master.getAllCustomers());
         customerIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
@@ -149,22 +155,23 @@ public class CustomerScreenController implements Initializable {
         postalCodeTableColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         countryTableColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
         phoneTableColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        
+
         boolean isAdded = false;
         try {
             String sql = "Call CustomerTableView";
             isAdded = new MYSQL().addCustomersFromQuery(sql);
             System.out.println(isAdded);
         } catch (Exception ex) {
-            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-        
+
     }
 
     @FXML
-    private void saveButtonAction(ActionEvent event) throws IOException, SQLException, Exception {
+    private void addButtonAction(ActionEvent event) throws IOException, SQLException, Exception {
         //TODO-- add textfield values to database, update tableview, then go to mainscreen
+        //TODO-- make getting all information a function then pass that to whatever callable statement you need
 
         String cu = customerNameTextField.getText();
 
@@ -184,7 +191,7 @@ public class CustomerScreenController implements Initializable {
         boolean result = false;
         try {
             CallableStatement cs = null;
-            String q = "{Call InsertNewCustomer(?,?,?,?,?,?,?,?)}";
+            String q = "{Call InsertCustomer(?,?,?,?,?,?,?,?)}";
             Connection conn = DBConnection.getConnection();
             cs = conn.prepareCall(q);
             cs.setString(1, cu);
@@ -207,7 +214,7 @@ public class CustomerScreenController implements Initializable {
         // Go to MainScreen
         Stage stage;
         Parent root;
-        stage = (Stage) saveButton.getScene().getWindow();
+        stage = (Stage) addButton.getScene().getWindow();
         //load up OTHER FXML document
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
                 "/View_Controller/MainScreen.fxml"));
@@ -253,10 +260,111 @@ public class CustomerScreenController implements Initializable {
     }
 
     @FXML
-    private void updateButtonAction() {
+    private void updateButtonAction() throws Exception {
 
-        //TODO-- after you press update, update the selected customer in the DB
-        //Todo-- currently have the button and the table set to populate the fields on the left
+        int cid = Integer.valueOf(customerIdTextField.getText());
+        String cu = customerNameTextField.getText();
+
+        int ac = 0;
+        boolean acrb = activeRadioButton.isSelected();
+        if (acrb) {
+            ac = 1;
+        }
+
+        String ad = addressTextField.getText();
+        String ad2 = address2TextField.getText();
+        String ci = cityTextField.getText();
+        String co = countryTextField.getText();
+        String po = postalCodeTextField.getText();
+        String ph = phoneTextField.getText();
+
+        boolean result = false;
+        try {
+            CallableStatement cs = null;
+            String q = "{Call UpdateCustomer(?,?,?,?,?,?,?,?,?,?)}";
+            Connection conn = DBConnection.getConnection();
+            cs = conn.prepareCall(q);
+            cs.setInt(1, cid);
+            cs.setString(2, cu);
+            cs.setBoolean(3, acrb);
+            cs.setString(4, ad);
+            cs.setString(5, ad2);
+            cs.setString(6, ci);
+            cs.setString(7, co);
+            cs.setString(8, po);
+            cs.setString(9, ph);
+            cs.setString(10, Master.getUser());
+
+            cs.executeQuery();  // could change this
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        }
+
+        //Clears old customerTableView
+        Master.deleteAllCustomers();
+
+        boolean isAdded = false;
+        try {
+            String sql = "Call CustomerTableView";
+            isAdded = new MYSQL().addCustomersFromQuery(sql);
+            System.out.println(isAdded);
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+
+    }
+
+    @FXML
+    private void deleteButtonAction() throws Exception {
+        System.out.println("delete button action");
+
+        boolean result = false;
+        try {
+            CallableStatement cs = null;
+            String q = "{Call DeleteCustomer(?)}";
+            Connection conn = DBConnection.getConnection();
+            cs = conn.prepareCall(q);
+            cs.setString(1, String.valueOf(customerIdTextField.getText()));
+
+            cs.executeQuery();  // could change this
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        }
+
+        //Clears old customerTableView
+        Master.deleteAllCustomers();
+
+        boolean isAdded = false;
+        try {
+            String sql = "Call CustomerTableView";
+            isAdded = new MYSQL().addCustomersFromQuery(sql);
+            System.out.println(isAdded);
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+
+    }
+
+    @FXML
+    private void clearButtonAction() {
+        customerIdTextField.setText(null);
+
+        customerNameTextField.setText(null);
+        activeRadioButton.setSelected(false);
+        addressTextField.setText(null);
+        address2TextField.setText(null);
+        cityTextField.setText(null);
+        countryTextField.setText(null);
+        postalCodeTextField.setText(null);
+        phoneTextField.setText(null);
     }
 
 }

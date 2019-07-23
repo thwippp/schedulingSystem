@@ -14,7 +14,38 @@ import javafx.collections.ObservableList;
  */
 public class Master {
 
+    public static String user;
+
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+
+    public static ObservableList<Appointment> getAllAppointments() {
+        return allAppointments;
+    }
+
+    public static void setAllAppointments(ObservableList<Appointment> allAppointments) {
+        Master.allAppointments = allAppointments;
+    }
+
+    public static void addAppointment(Appointment appointment) {
+        allAppointments.add(appointment);
+    }
+
+    public static void deleteAppointment(Appointment appointment) {
+        allAppointments.remove(appointment);
+    }
+
+    public static void deleteAllAppointments() {
+        allAppointments.clear();
+    }
+
+    public static String getUser() {
+        return user;
+    }
+
+    public static void setUser(String user) {
+        Master.user = user;
+    }
 
     public static void addCustomer(Customer customer) {
         allCustomers.add(customer);

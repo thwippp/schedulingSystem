@@ -65,7 +65,7 @@ public class User {
         String sql = "select userId, userName, password, active from user \n"
                 + "where username = '" + username + "'\n"
                 + "limit 1;";
- 
+
         ObservableList<ArrayList> result = (ObservableList<ArrayList>) new MYSQL().query(sql);
         System.out.println(result);
         return result;

@@ -6,13 +6,17 @@
 package View_Controller;
 
 import Model.MYSQL;
+import Model.Master;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,9 +24,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -46,7 +53,39 @@ public class LoginScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        java.util.logging.Logger log = java.util.logging.Logger.getLogger("log.txt");
+
+        try {
+            FileHandler fh = new FileHandler("log.txt", true);
+            SimpleFormatter sf = new SimpleFormatter();
+            fh.setFormatter(sf);
+            log.addHandler(fh);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        log.setLevel(Level.INFO); //change this line to see how the output changes!
+
+        // TODO delete dummy values
+        usernameTextField.setText("test");
+        passwordPasswordField.setText("test");
+
+        System.out.println(Locale.getDefault());
+        Locale currentLocale = Locale.getDefault();
+
+        System.out.println(currentLocale.getDisplayLanguage());
+        System.out.println(currentLocale.getDisplayCountry());
+
+        System.out.println(currentLocale.getLanguage());
+        System.out.println(currentLocale.getCountry());
+
+        System.out.println(System.getProperty("user.country"));
+        System.out.println(System.getProperty("user.language"));
+
+        log.log(Level.INFO, usernameTextField.getText());
+        log.log(Level.INFO,passwordPasswordField.getText());
+        
     }
 
     @FXML
@@ -59,22 +98,85 @@ public class LoginScreenController implements Initializable {
 
         // Get Password
         String password = passwordPasswordField.getText();
-        
+
         // Match on username
         ObservableList<ArrayList> result = null;
         try {
-            String sql = "select userId, userName, password, active from user \n"
-                + "where username = '" + username + "'\n"
-                + "limit 1;";
+            String sql = "SELECT userId, userName, password, active\n"
+                    + "FROM user WHERE username = '" + username + "' AND password = '" + password + "' LIMIT 1;";
             result = new MYSQL().query(sql);
             System.out.println(result);
         } catch (Exception ex) {
-            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-               
-        System.out.println(result.size());
-        
+
+        boolean isValidUser;
+        isValidUser = result.size() > 0;
+
+        System.out.println("User is valid? " + isValidUser);
+
+        if (!isValidUser) {
+            // ALERT
+            String title = "Error";
+            String header = "Invalid User";
+            String content = "Sorry. I can't find that user in the database.  Please try again.";
+
+            // TODO-- Change error text... 2 languages... based on location
+            //"Sorry. The Username and Password don't match."
+            // "Lo siento. El nombre de usuario y la contraseña no coinciden."
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+
+            Image image = new Image("/Model/invisible.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+
+        }
+        boolean isFifteenMinuteWarningGood = false;
+        // Match on username
+        ObservableList<ArrayList> fifteenMin = null;
+        try {
+            String sql = "call FifteenMinuteWarning";
+            fifteenMin = new MYSQL().query(sql);
+
+            int fM = Integer.valueOf(fifteenMin.get(0).get(0).toString());
+
+            isFifteenMinuteWarningGood = fM > 15;
+
+            System.out.println(result);
+        } catch (Exception ex) {
+            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+
+        if (!isFifteenMinuteWarningGood) {
+            // ALERT
+            String title = "Warning";
+            String header = "15 Minute Warning";
+            String content = "There is an appointment within 15 minutes.";
+
+            // TODO-- Change error text... 2 languages... based on location
+            //"Sorry. The Username and Password don't match."
+            // "Lo siento. El nombre de usuario y la contraseña no coinciden."
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+
+            Image image = new Image("/Model/calendar.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+        }
+
+//        else{  // TODO Uncomment Me
+        // Set Master User
+        Master.setUser(username);
+
         // Switch scene to MainScreen
         Stage stage;
         Parent root;
@@ -86,6 +188,7 @@ public class LoginScreenController implements Initializable {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+//        }  // TODO Uncomment Me
     }
 
 }

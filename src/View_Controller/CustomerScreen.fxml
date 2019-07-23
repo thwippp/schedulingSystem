@@ -24,7 +24,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </padding>
                     <children>
-                        <VBox alignment="CENTER" fillWidth="false" prefHeight="450.0" prefWidth="400.0" spacing="10.0" stylesheets="@Style.css">
+                        <VBox alignment="CENTER" fillWidth="false" prefHeight="450.0" prefWidth="600.0" spacing="5.0" stylesheets="@Style.css">
                             <children>
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Record">
                                     <font>
@@ -33,13 +33,13 @@
                                 </Text>
                                 <Separator focusTraversable="false" orientation="VERTICAL" visible="false" />
                                 <Label text="Customer Id" />
-                                <TextField fx:id="customerIdTextField" alignment="CENTER" promptText="CustomerId" />
+                                <TextField fx:id="customerIdTextField" alignment="CENTER" promptText="Customer Id" />
                                 <Label text="Customer Name" />
                                 <TextField fx:id="customerNameTextField" alignment="CENTER" promptText="Customer Name" />
                                 <RadioButton fx:id="activeRadioButton" mnemonicParsing="false" text="Active Customer" />
                                 <HBox spacing="10.0">
                                     <children>
-                                        <VBox>
+                                        <VBox spacing="5.0">
                                             <children>
                                                 <Label text="Address" />
                                                 <TextField fx:id="addressTextField" alignment="CENTER" promptText="Address" />
@@ -48,43 +48,72 @@
                                                 <Label text="City" />
                                                 <TextField fx:id="cityTextField" alignment="CENTER" promptText="City" />
                                             </children>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </padding>
+                                            <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </HBox.margin>
                                         </VBox>
-                                        <VBox>
+                                        <VBox spacing="5.0">
                                             <children>
                                                 <Label text="Country" />
                                                 <TextField fx:id="countryTextField" alignment="CENTER" promptText="Country" />
                                                 <Label text="Postal Code" />
                                                 <TextField fx:id="postalCodeTextField" alignment="CENTER" promptText="Postal Code" />
                                                 <Label text="Phone" />
-                                                <TextField fx:id="phoneTextField" alignment="CENTER" promptText="Phone-(XXX) XXX-XXXX" />
+                                                <TextField fx:id="phoneTextField" alignment="CENTER" promptText="Phone" />
                                             </children>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </padding>
+                                            <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </HBox.margin>
                                         </VBox>
                                     </children>
                                     <padding>
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                     </padding>
-                                </HBox>
-                                <HBox spacing="10.0">
-                                    <children>
-                                        <Button fx:id="saveButton" defaultButton="true" mnemonicParsing="false" onAction="#saveButtonAction" text="Save" />
-                                        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
-                                        <Separator prefWidth="25.0" visible="false" />
-                                        <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateButtonAction" text="Update" />
-                                    </children>
                                     <VBox.margin>
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                     </VBox.margin>
+                                </HBox>
+                                <HBox spacing="10.0">
+                                    <children>
+                                        <Button fx:id="addButton" defaultButton="true" mnemonicParsing="false" onAction="#addButtonAction" text="Add / Insert" />
+                                        <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateButtonAction" text="Update" />
+                                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteButtonAction" text="Delete" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
                                     <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </padding>
+                                </HBox>
+                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                    <children>
+                                        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearButtonAction" text="Clear" />
+                                        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </padding>
                                 </HBox>
                             </children>
                             <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
+                            <HBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </HBox.margin>
                         </VBox>
                         <TableView fx:id="customerTableView" onMouseReleased="#tableViewSelectionAction">
                             <columns>
