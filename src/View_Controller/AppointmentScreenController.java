@@ -380,9 +380,8 @@ public class AppointmentScreenController implements Initializable {
         String url = urlTextField.getText();
 
         // INSERT into MySQL
-        boolean result = false;
+//        boolean result = false;  delete me?
 
-        // TODO FIX THIS INSERT-- 07/17/19
         try {
             CallableStatement cs = null;
             String q = "{call insertappointment(?,?,?,?,?,?,?,?,?)}";

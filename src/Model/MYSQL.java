@@ -5,12 +5,8 @@
  */
 package Model;
 
-import Model.Customer;
-import Model.Master;
-import Model.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -18,7 +14,6 @@ import javafx.collections.ObservableList;
  *
  * @author bscha
  */
-// TODO-- DOES THIS HAVE TO BE STATIC?
 public class MYSQL {
 
     private Statement stmt;
@@ -141,6 +136,65 @@ public class MYSQL {
 
         return table;
     }
+    
+    
+     public ObservableList<ArrayList> queryWithTimestamps(String query) throws Exception {
+
+        ObservableList<ArrayList> table = FXCollections.observableArrayList();
+
+        System.out.println("Starting try...");
+        try {
+            // opening database connection to MySQL server 
+            Connection conn = DBConnection.getConnection();
+            // getting Statement object to execute query 
+            stmt = conn.createStatement();
+            // executing SELECT query 
+            rs = stmt.executeQuery(query);
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            int rsCols = getColumnCount(rs);
+//            int rsRows = getRowCount(rs);
+
+            
+
+            for (int i = 0; i < rsCols; i++) {
+                String colName = rsmd.getColumnName(i + 1);
+                headers.add(colName);
+            }
+            // Disabled adding headers
+//            table.add(headers);
+
+            while (rs.next()) {
+                ArrayList<String> row = new ArrayList<String>();
+
+                for (int i = 0; i < rsCols; i++) {
+                                    
+                    try{
+                        row.add(rs.getTimestamp(i + 1).toString());
+                    }
+                    catch(Exception e){
+                    
+                    row.add(rs.getString(i + 1));
+                    
+                    }
+                    
+                }
+                table.add(row);
+            }
+
+        } catch (Exception e) {
+            // do nothing
+            System.out.println("Catch...");
+            System.out.println(e);
+            return null;
+        }
+        System.out.println("return...");
+        DBConnection.closeConnection();
+
+        return table;
+    }
+    
 
     public static int getColumnCount(ResultSet resultSet) throws SQLException {
         return resultSet.getMetaData().getColumnCount();

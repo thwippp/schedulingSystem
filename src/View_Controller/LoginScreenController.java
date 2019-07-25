@@ -5,14 +5,27 @@
  */
 package View_Controller;
 
+import Model.DBConnection;
+import Model.DateAndTime;
 import Model.MYSQL;
 import Model.Master;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +66,13 @@ public class LoginScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // TODO delete dummy values
+        usernameTextField.setText("test");
+        passwordPasswordField.setText("test");
+    }
+
+    @FXML
+    private void loginButtonAction(ActionEvent event) throws IOException, SQLException, Exception {
         java.util.logging.Logger log = java.util.logging.Logger.getLogger("log.txt");
 
         try {
@@ -65,33 +85,32 @@ public class LoginScreenController implements Initializable {
         } catch (SecurityException ex) {
             java.util.logging.Logger.getLogger(Logger.class.getName()).log(Level.SEVERE, null, ex);
         }
-        log.setLevel(Level.INFO); //change this line to see how the output changes!
+        log.setLevel(Level.INFO);  // adjust logging level
 
-        // TODO delete dummy values
-        usernameTextField.setText("test");
-        passwordPasswordField.setText("test");
-
-        System.out.println(Locale.getDefault());
-        Locale currentLocale = Locale.getDefault();
-
-        System.out.println(currentLocale.getDisplayLanguage());
-        System.out.println(currentLocale.getDisplayCountry());
-
-        System.out.println(currentLocale.getLanguage());
-        System.out.println(currentLocale.getCountry());
-
-        System.out.println(System.getProperty("user.country"));
-        System.out.println(System.getProperty("user.language"));
-
-        log.log(Level.INFO, usernameTextField.getText());
-        log.log(Level.INFO,passwordPasswordField.getText());
+        // Set timezone for user based on timezone in OS
+        DateAndTime dt = new DateAndTime();
+        dt.setLocalZoneId(ZoneId.systemDefault());
+        ZoneId localZoneId = dt.getLocalZoneId();
+        ZoneOffset offset = localZoneId.getRules().getOffset(Instant.now());
         
-    }
-
-    @FXML
-    private void loginButtonAction(ActionEvent event) throws IOException, SQLException {
-        // Get UTC_Timestamp
-        // 
+        // Set offset in Master class
+        Master.setOffset(offset.toString());
+        
+        
+        //Temp query test
+        ObservableList<ArrayList> res = null;
+        try {
+            String sql = "select title, convert_tz(start,'+0:00', '" + Master.getOffset() + "' ), start from appointment";  
+            res = new MYSQL().query(sql);
+            System.out.println(res);
+        } catch (Exception ex) {
+            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+               
+        System.out.println("Master offset: " + Master.getOffset());
+        System.out.println("Local ZoneId: " + localZoneId);
+        System.out.println("Offset: " + offset);
 
         // Get Username
         String username = usernameTextField.getText();
@@ -171,24 +190,25 @@ public class LoginScreenController implements Initializable {
             ImageView imageView = new ImageView(image);
             alert.setGraphic(imageView);
             alert.showAndWait();
+        } else {
+            // Set Master User
+            Master.setUser(username);
+
+            // Log User
+            log.log(Level.INFO, "User \"{0}\" has logged in.", usernameTextField.getText());
+
+            // Switch scene to MainScreen
+            Stage stage;
+            Parent root;
+            stage = (Stage) loginButton.getScene().getWindow();
+            //load up OTHER FXML document
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/View_Controller/MainScreen.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
         }
-
-//        else{  // TODO Uncomment Me
-        // Set Master User
-        Master.setUser(username);
-
-        // Switch scene to MainScreen
-        Stage stage;
-        Parent root;
-        stage = (Stage) loginButton.getScene().getWindow();
-        //load up OTHER FXML document
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/View_Controller/MainScreen.fxml"));
-        root = loader.load();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-//        }  // TODO Uncomment Me
     }
 
 }

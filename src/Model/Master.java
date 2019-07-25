@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 public class Master {
 
     public static String user;
+    public static String offset;
 
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
@@ -37,6 +38,14 @@ public class Master {
 
     public static void deleteAllAppointments() {
         allAppointments.clear();
+    }
+    
+     public static String getOffset() {
+        return offset;
+    }
+
+    public static void setOffset(String offset) {
+        Master.offset = offset;
     }
 
     public static String getUser() {
