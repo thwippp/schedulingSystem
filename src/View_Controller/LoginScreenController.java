@@ -92,22 +92,28 @@ public class LoginScreenController implements Initializable {
         dt.setLocalZoneId(ZoneId.systemDefault());
         ZoneId localZoneId = dt.getLocalZoneId();
         ZoneOffset offset = localZoneId.getRules().getOffset(Instant.now());
-        
+
         // Set offset in Master class
         Master.setOffset(offset.toString());
-        
-        
+
+        // NOTES
+        /*
+               ... convert_tz(start | end ,'+0:00', '" + Master.getOffset() + "' ), ...  gettting information from the DB
+               ... convert_tz(start | end , '" + Master.getOffset() + "''+0:00', ), ...  putting information into the DB
+
+                
+         */
         //Temp query test
         ObservableList<ArrayList> res = null;
         try {
-            String sql = "select title, convert_tz(start,'+0:00', '" + Master.getOffset() + "' ), start from appointment";  
+            String sql = "select title, convert_tz(start,'+0:00', '" + Master.getOffset() + "' ), start from appointment";
             res = new MYSQL().query(sql);
             System.out.println(res);
         } catch (Exception ex) {
             Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-               
+
         System.out.println("Master offset: " + Master.getOffset());
         System.out.println("Local ZoneId: " + localZoneId);
         System.out.println("Offset: " + offset);
