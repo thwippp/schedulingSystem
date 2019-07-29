@@ -6,6 +6,7 @@
 package View_Controller;
 
 import Model.MYSQL;
+import Model.Master;
 import Model.Report;
 import java.io.IOException;
 import java.net.URL;
@@ -94,7 +95,22 @@ public class ReportScreenController implements Initializable {
                     break;
             }
         } catch (Exception e) {
-            sql = "select * from AppointmentTableView";
+//            sql = "select * from AppointmentTableView";  // CHANGEME
+            String offset = Master.getOffset();
+            sql = "(SELECT \n"
+                    + "        `appointment`.`title` AS `title`,\n"
+                    + "        `appointment`.`description` AS `description`,\n"
+                    + "        `appointment`.`type` AS `type`,\n"
+                    + "        `customer`.`customerName` AS `customerName`,\n"
+                    + "        `appointment`.`contact` AS `contact`,\n"
+                    + "        `appointment`.`location` AS `location`,\n"
+                    + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','"+ offset +"'), '%m-%d-%Y') AS `date`,\n"
+                    + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','"+ offset +"'), '%H:%i') AS `start`,\n"
+                    + "        DATE_FORMAT(convert_tz(`appointment`.`end`,'+0:00','"+ offset +"'), '%H:%i') AS `end`\n"
+                    + "    FROM\n"
+                    + "        (`appointment`\n"
+                    + "        JOIN `customer` ON ((`appointment`.`customerId` = `customer`.`customerId`))))";
+
             r.add("Title");
             r.add("Description");
             r.add("Type");

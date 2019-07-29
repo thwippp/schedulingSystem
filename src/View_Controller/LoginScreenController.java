@@ -5,27 +5,17 @@
  */
 package View_Controller;
 
-import Model.DBConnection;
 import Model.DateAndTime;
 import Model.MYSQL;
 import Model.Master;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,16 +94,15 @@ public class LoginScreenController implements Initializable {
                 
          */
         //Temp query test
-        ObservableList<ArrayList> res = null;
-        try {
-            String sql = "select title, convert_tz(start,'+0:00', '" + Master.getOffset() + "' ), start from appointment";
-            res = new MYSQL().query(sql);
-            System.out.println(res);
-        } catch (Exception ex) {
-            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error");
-        }
-
+//        ObservableList<ArrayList> res = null;
+//        try {
+//            String sql = "select title, convert_tz(start,'+0:00', '" + Master.getOffset() + "' ), start from appointment";
+//            res = new MYSQL().query(sql);
+//            System.out.println(res);
+//        } catch (Exception ex) {
+//            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
+//            System.out.println("Error");
+//        }
         System.out.println("Master offset: " + Master.getOffset());
         System.out.println("Local ZoneId: " + localZoneId);
         System.out.println("Offset: " + offset);
@@ -160,43 +149,47 @@ public class LoginScreenController implements Initializable {
             alert.setGraphic(imageView);
             alert.showAndWait();
 
-        }
-        boolean isFifteenMinuteWarningGood = false;
-        // Match on username
-        ObservableList<ArrayList> fifteenMin = null;
-        try {
-            String sql = "call FifteenMinuteWarning";
-            fifteenMin = new MYSQL().query(sql);
+        } // end if invald user
+        else {
+            boolean isFifteenMinuteWarningGood = true;
 
-            int fM = Integer.valueOf(fifteenMin.get(0).get(0).toString());
+            ObservableList<ArrayList> fifteenMin = null;
+            try {
+                String sql = "call FifteenMinuteWarning";
+                fifteenMin = new MYSQL().query(sql);
+                int fM = Integer.valueOf(fifteenMin.get(0).get(0).toString());
+                isFifteenMinuteWarningGood = fM > 15;
+                System.out.println(fM);
+            } catch (Exception ex) {
+                Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error");
+            }
+            if (!isFifteenMinuteWarningGood) {
+                // ALERT
+                String title = "Warning";
+                String header = "15 Minute Warning";
+                String content = null;
+                try {
+                    content = "There is a " + fifteenMin.get(0).get(1).toString() + " appointment with " + fifteenMin.get(0).get(2).toString() + " called " + fifteenMin.get(0).get(3).toString() + " in " + fifteenMin.get(0).get(0).toString() + " minute(s).";
+                } catch (Exception e) {
+                    content = "There are no appointments within 15 minutes.";
+                }
 
-            isFifteenMinuteWarningGood = fM > 15;
+                // TODO-- Change error text... 2 languages... based on location
+                //"Sorry. The Username and Password don't match."
+                // "Lo siento. El nombre de usuario y la contraseña no coinciden."
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(title);
+                alert.setHeaderText(header);
+                alert.setContentText(content);
 
-            System.out.println(result);
-        } catch (Exception ex) {
-            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error");
-        }
-
-        if (!isFifteenMinuteWarningGood) {
-            // ALERT
-            String title = "Warning";
-            String header = "15 Minute Warning";
-            String content = "There is an appointment within 15 minutes.";
-
-            // TODO-- Change error text... 2 languages... based on location
-            //"Sorry. The Username and Password don't match."
-            // "Lo siento. El nombre de usuario y la contraseña no coinciden."
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(title);
-            alert.setHeaderText(header);
-            alert.setContentText(content);
-
-            Image image = new Image("/Model/calendar.png");
-            ImageView imageView = new ImageView(image);
-            alert.setGraphic(imageView);
-            alert.showAndWait();
-        } else {
+                Image image = new Image("/Model/calendarWarning.png");
+                ImageView imageView = new ImageView(image);
+                alert.setGraphic(imageView);
+                alert.showAndWait();
+            }/* end if appointment is scheduled within 15 minutes*/  //else {
+            
+            
             // Set Master User
             Master.setUser(username);
 
@@ -214,7 +207,8 @@ public class LoginScreenController implements Initializable {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-        }
-    }
+        }// end else change scenes
+        // }  // end else valid user
+    } // end loginbuttonaction
 
-}
+}  // end class

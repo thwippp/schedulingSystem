@@ -123,7 +123,7 @@ public class AppointmentScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         //Gets current application user
         String currentUser = Master.getUser();
         System.out.println("Current user: " + currentUser);
@@ -147,8 +147,13 @@ public class AppointmentScreenController implements Initializable {
         // Populate Appointment TableView from Query
         boolean isAdded = false;
         try {
+            String offset = Master.getOffset();
+            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
+                    + "join customer on appointment.customerId = customer.customerId";
+            /*
             String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(start) date, DATE_FORMAT(start, '%H:%i') start, DATE_FORMAT(end, '%H:%i') end, url from appointment\n"
                     + "join customer on appointment.customerId = customer.customerId";
+             */
             isAdded = new MYSQL().addAppointmentsFromQuery(sql);
             System.out.println(isAdded);
         } catch (Exception ex) {
@@ -211,14 +216,12 @@ public class AppointmentScreenController implements Initializable {
             System.out.println("Error");
         }
 
-        // Start
-        startChoiceBox.getItems().addAll("8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30");
+        // Start  // 7/25
+        startChoiceBox.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30");
 
         // End
-        endChoiceBox.getItems().addAll("8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30");
+        endChoiceBox.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30");
     }
-
-    
 
     @FXML
     private void weekViewButtonAction() {
@@ -265,7 +268,8 @@ public class AppointmentScreenController implements Initializable {
         // Populate Appointment TableView from Query
         boolean isAdded = false;
         try {
-            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(start) date, DATE_FORMAT(start, '%H:%i') start, DATE_FORMAT(end, '%H:%i') end, url from appointment\n"
+            String offset = Master.getOffset();
+            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
                     + "join customer on appointment.customerId = customer.customerId\n"
                     + "where month(start) = " + month;
             isAdded = new MYSQL().addAppointmentsFromQuery(sql);
@@ -279,18 +283,19 @@ public class AppointmentScreenController implements Initializable {
 
     @FXML
     private void resetButtonAction() {
-        
+
         // Resets week and month date pickers
         weekDatePicker.setValue(null);
         monthDatePicker.setValue(null);
-        
+
         // Cleans out appointment list so that the query can re-populate it
         Master.deleteAllAppointments();
 
         // Populate Appointment TableView from Query
         boolean isAdded = false;
         try {
-            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(start) date, DATE_FORMAT(start, '%H:%i') start, DATE_FORMAT(end, '%H:%i') end, url from appointment\n"
+            String offset = Master.getOffset();
+            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
                     + "join customer on appointment.customerId = customer.customerId";
             isAdded = new MYSQL().addAppointmentsFromQuery(sql);
             System.out.println(isAdded);
@@ -305,7 +310,7 @@ public class AppointmentScreenController implements Initializable {
     private void tableViewSelectionAction() {
 
         Appointment selectedAppointment = appointmentTableView.getSelectionModel().getSelectedItem();
-        
+
         String title = selectedAppointment.getTitle();
         String description = selectedAppointment.getDescription();
 
@@ -318,11 +323,9 @@ public class AppointmentScreenController implements Initializable {
         // Date down below... more complicated
         String start = selectedAppointment.getStart();
         String end = selectedAppointment.getEnd();
-        
-        
+
         String url = selectedAppointment.getUrl();
-        
-        
+
         titleTextField.setText(title);
         descriptionTextArea.setText(description);
         typeChoiceBox.setValue(type);
@@ -334,23 +337,23 @@ public class AppointmentScreenController implements Initializable {
         startChoiceBox.setValue(start);
         endChoiceBox.setValue(end);
         urlTextField.setText(url);
-        
-         ObservableList<ArrayList> result = null;
+
+        ObservableList<ArrayList> result = null;
         try {
             String sql = "select appointmentId from appointment"
-                    + " where title = '" + title 
-                    + "' and description = '" + description 
-                    + "' and type = '" + type 
-//                    + "' and customer = '" + customer 
-                    + "' and contact = '" + contact 
-                    + "' and location = '" + location 
+                    + " where title = '" + title
+                    + "' and description = '" + description
+                    + "' and type = '" + type
+                    //                    + "' and customer = '" + customer 
+                    + "' and contact = '" + contact
+                    + "' and location = '" + location
                     + "' and url = '" + url + "'";
-            
+
             result = new MYSQL().query(sql);
 
             String aId = (String) result.get(0).get(0).toString();
             appointmentIdLabel.setText(aId);
-            
+
             System.out.println(result);
         } catch (Exception ex) {
             Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -373,19 +376,16 @@ public class AppointmentScreenController implements Initializable {
         String dateString = dateDatePicker.getValue().toString();
         String startString = startChoiceBox.getValue().toString();
         String endString = endChoiceBox.getValue().toString();
-        
+
         String start = dateString + " " + startString + ":00";
         String end = dateString + " " + endString + ":00";
-        
+
         String url = urlTextField.getText();
 
         // INSERT into MySQL
-//        boolean result = false;  delete me?
-
         try {
             CallableStatement cs = null;
-            String q = "{call insertappointment(?,?,?,?,?,?,?,?,?)}";
-//            call insertappointment(@title, @description, @type, @customerName, @contact, @location, @start, @end, @url);
+            String q = "{call insertappointment(?,?,?,?,?,?,?,?,?,?)}";
             Connection conn = DBConnection.getConnection();
             cs = conn.prepareCall(q);
             cs.setString(1, title);
@@ -397,8 +397,9 @@ public class AppointmentScreenController implements Initializable {
             cs.setString(7, start);
             cs.setString(8, end);
             cs.setString(9, url);
+            cs.setString(10, Master.getOffset());  // Changed 7/25 in DB and here
 
-            cs.executeQuery();  // could change this
+            cs.executeQuery();
             conn.close();
 
         } catch (SQLException ex) {
@@ -419,12 +420,12 @@ public class AppointmentScreenController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     @FXML
     private void updateButtonAction(ActionEvent event) throws IOException, Exception {
         // TODO-- update appointment... look at updateCustomer
         // basically add customer... but new information
-        
+
         String title = titleTextField.getText();
         String description = descriptionTextArea.getText();
 
@@ -437,12 +438,12 @@ public class AppointmentScreenController implements Initializable {
         String dateString = dateDatePicker.getValue().toString();
         String startString = startChoiceBox.getValue().toString();
         String endString = endChoiceBox.getValue().toString();
-        
+
         String start = dateString + " " + startString + ":00";
         String end = dateString + " " + endString + ":00";
-        
+
         String url = urlTextField.getText();
-        
+
         int appointmentId = Integer.valueOf(appointmentIdLabel.getText());
 
         // INSERT into MySQL
@@ -450,7 +451,7 @@ public class AppointmentScreenController implements Initializable {
 
         try {
             CallableStatement cs = null;
-            String q = "{call UpdateAppointment(?,?,?,?,?,?,?,?,?,?)}";
+            String q = "{call UpdateAppointment(?,?,?,?,?,?,?,?,?,?,?)}";
             Connection conn = DBConnection.getConnection();
             cs = conn.prepareCall(q);
             cs.setString(1, title);
@@ -463,24 +464,26 @@ public class AppointmentScreenController implements Initializable {
             cs.setString(8, end);
             cs.setString(9, url);
             cs.setInt(10, appointmentId);
+            cs.setString(11, Master.getOffset());  // updated 7/24 in DB and here.
 
             cs.executeQuery();
             conn.close();
-            
+
             System.out.println("Query Complete");
 
         } catch (SQLException ex) {
             Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
         }
-        
+
         //Clears old appointmentTableView
         Master.deleteAllAppointments();
 
-         // Populate Appointment TableView from Query
+        // Populate Appointment TableView from Query
         boolean isAdded = false;
         try {
-            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(start) date, DATE_FORMAT(start, '%H:%i') start, DATE_FORMAT(end, '%H:%i') end, url from appointment\n"
+            String offset = Master.getOffset();
+            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
                     + "join customer on appointment.customerId = customer.customerId";
             isAdded = new MYSQL().addAppointmentsFromQuery(sql);
             System.out.println(isAdded);
@@ -488,13 +491,13 @@ public class AppointmentScreenController implements Initializable {
             Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-        
+
     }
 
     @FXML
     private void deleteButtonAction(ActionEvent event) throws IOException, Exception {
 
-         System.out.println("delete button action");
+        System.out.println("delete button action");
 
         boolean result = false;
         try {
@@ -515,10 +518,11 @@ public class AppointmentScreenController implements Initializable {
         //Clears old customerTableView
         Master.deleteAllAppointments();
 
-       // Populate Appointment TableView from Query
+        // Populate Appointment TableView from Query
         boolean isAdded = false;
         try {
-            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(start) date, DATE_FORMAT(start, '%H:%i') start, DATE_FORMAT(end, '%H:%i') end, url from appointment\n"
+            String offset = Master.getOffset();
+            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
                     + "join customer on appointment.customerId = customer.customerId";
             isAdded = new MYSQL().addAppointmentsFromQuery(sql);
             System.out.println(isAdded);
@@ -526,7 +530,7 @@ public class AppointmentScreenController implements Initializable {
             Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-        
+
     }
 
     @FXML
