@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -33,6 +34,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -43,6 +45,9 @@ import javafx.stage.Stage;
 public class LoginScreenController implements Initializable {
 
     @FXML
+    private Text loginText;
+
+    @FXML
     private TextField usernameTextField;
 
     @FXML
@@ -51,6 +56,10 @@ public class LoginScreenController implements Initializable {
     @FXML
     private Button loginButton;
 
+// TODO Language/ resource bundle stuff    
+
+    
+    
     /**
      * Initializes the controller class.
      */
@@ -59,6 +68,18 @@ public class LoginScreenController implements Initializable {
         // TODO delete dummy values
         usernameTextField.setText("test");
         passwordPasswordField.setText("test");
+
+        //Locale
+        Locale locale = Locale.getDefault();
+        System.out.println(locale);
+
+        // TODO language/ resource bundle
+        // System.out.println(bundle.getString("logIn"));
+       
+            ResourceBundle bundle = ResourceBundle.getBundle("Language/language", Locale.getDefault());  // Is this how I get the user's Region/Language from the OS/JVM?  Where is that set in Windows?
+            loginText.setText("hello");
+            loginText.setText(bundle.getString("logIn"));
+
     }
 
     @FXML
@@ -86,23 +107,6 @@ public class LoginScreenController implements Initializable {
         // Set offset in Master class
         Master.setOffset(offset.toString());
 
-        // NOTES
-        /*
-               ... convert_tz(start | end ,'+0:00', '" + Master.getOffset() + "' ), ...  gettting information from the DB
-               ... convert_tz(start | end , '" + Master.getOffset() + "''+0:00', ), ...  putting information into the DB
-
-                
-         */
-        //Temp query test
-//        ObservableList<ArrayList> res = null;
-//        try {
-//            String sql = "select title, convert_tz(start,'+0:00', '" + Master.getOffset() + "' ), start from appointment";
-//            res = new MYSQL().query(sql);
-//            System.out.println(res);
-//        } catch (Exception ex) {
-//            Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
-//            System.out.println("Error");
-//        }
         System.out.println("Master offset: " + Master.getOffset());
         System.out.println("Local ZoneId: " + localZoneId);
         System.out.println("Offset: " + offset);
@@ -151,33 +155,27 @@ public class LoginScreenController implements Initializable {
 
         } // end if invald user
         else {
-            boolean isFifteenMinuteWarningGood = true;
 
             ObservableList<ArrayList> fifteenMin = null;
             try {
                 String sql = "call FifteenMinuteWarning";
                 fifteenMin = new MYSQL().query(sql);
-                int fM = Integer.valueOf(fifteenMin.get(0).get(0).toString());
-                isFifteenMinuteWarningGood = fM > 15;
-                System.out.println(fM);
+                System.out.println(fifteenMin);
             } catch (Exception ex) {
                 Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("Error");
             }
-            if (!isFifteenMinuteWarningGood) {
+
+            boolean isAppointmentInFifteen;
+            isAppointmentInFifteen = fifteenMin.size() > 0;
+
+            if (isAppointmentInFifteen) {
                 // ALERT
                 String title = "Warning";
                 String header = "15 Minute Warning";
                 String content = null;
-                try {
-                    content = "There is a " + fifteenMin.get(0).get(1).toString() + " appointment with " + fifteenMin.get(0).get(2).toString() + " called " + fifteenMin.get(0).get(3).toString() + " in " + fifteenMin.get(0).get(0).toString() + " minute(s).";
-                } catch (Exception e) {
-                    content = "There are no appointments within 15 minutes.";
-                }
+                content = "There is a " + fifteenMin.get(0).get(1).toString() + " appointment with " + fifteenMin.get(0).get(2).toString() + " called " + fifteenMin.get(0).get(3).toString() + " in " + fifteenMin.get(0).get(0).toString() + " minute(s).";
 
-                // TODO-- Change error text... 2 languages... based on location
-                //"Sorry. The Username and Password don't match."
-                // "Lo siento. El nombre de usuario y la contraseña no coinciden."
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle(title);
                 alert.setHeaderText(header);
@@ -188,8 +186,6 @@ public class LoginScreenController implements Initializable {
                 alert.setGraphic(imageView);
                 alert.showAndWait();
             }/* end if appointment is scheduled within 15 minutes*/  //else {
-            
-            
             // Set Master User
             Master.setUser(username);
 

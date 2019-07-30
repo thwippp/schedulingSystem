@@ -23,6 +23,9 @@ public class Master {
     public static ObservableList<Appointment> getAllAppointments() {
         return allAppointments;
     }
+    public static Appointment getAppointment(int appointment){
+        return allAppointments.get(appointment);
+    }
 
     public static void setAllAppointments(ObservableList<Appointment> allAppointments) {
         Master.allAppointments = allAppointments;

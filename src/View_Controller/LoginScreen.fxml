@@ -18,7 +18,7 @@
             <center>
                 <VBox alignment="CENTER" fillWidth="false" spacing="10.0" stylesheets="@Style.css" BorderPane.alignment="CENTER">
                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
+                        <Text fx:id="loginText" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
                             <font>
                                 <Font name="Roboto" size="30.0" />
                             </font>

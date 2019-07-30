@@ -14,11 +14,14 @@ import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import static java.util.Calendar.MONDAY;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -31,16 +34,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -423,9 +428,6 @@ public class AppointmentScreenController implements Initializable {
 
     @FXML
     private void updateButtonAction(ActionEvent event) throws IOException, Exception {
-        // TODO-- update appointment... look at updateCustomer
-        // basically add customer... but new information
-
         String title = titleTextField.getText();
         String description = descriptionTextArea.getText();
 
@@ -446,51 +448,150 @@ public class AppointmentScreenController implements Initializable {
 
         int appointmentId = Integer.valueOf(appointmentIdLabel.getText());
 
-        // INSERT into MySQL
-        boolean result = false;
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        Date beginningOfDay = timeFormat.parse("08:00");
+        Date endOfDay = timeFormat.parse("17:00");
+        Date s = timeFormat.parse(startString);
+        Date e = timeFormat.parse(endString);
 
-        try {
-            CallableStatement cs = null;
-            String q = "{call UpdateAppointment(?,?,?,?,?,?,?,?,?,?,?)}";
-            Connection conn = DBConnection.getConnection();
-            cs = conn.prepareCall(q);
-            cs.setString(1, title);
-            cs.setString(2, description);
-            cs.setString(3, type);
-            cs.setString(4, customer);
-            cs.setString(5, contact);
-            cs.setString(6, location);
-            cs.setString(7, start);
-            cs.setString(8, end);
-            cs.setString(9, url);
-            cs.setInt(10, appointmentId);
-            cs.setString(11, Master.getOffset());  // updated 7/24 in DB and here.
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            cs.executeQuery();
-            conn.close();
+        // Selected Start and End Dates
+        Date sd = dateFormat.parse(start);
+        Date ed = dateFormat.parse(end);
 
-            System.out.println("Query Complete");
+        // Selected Start and End Instant
+        Instant iStart = sd.toInstant();
+        Instant iEnd = ed.toInstant();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex);
-        }
+        // Overlapping test
+        boolean isOverlappingAppointment = false;
+        String overlappingAppointmentTitle = null;
+        int a = 0;
+        while (a < Master.getAllAppointments().size()) {
+            String cStartDateString = Master.getAppointment(a).getDate();
+            String cStartTimeString = Master.getAppointment(a).getStart();
+            String cEndTimeString = Master.getAppointment(a).getEnd();
 
-        //Clears old appointmentTableView
-        Master.deleteAllAppointments();
+            String cStartString = cStartDateString + " " + cStartTimeString + ":00";
+            String cEndString = cStartDateString + " " + cEndTimeString + ":00";
 
-        // Populate Appointment TableView from Query
-        boolean isAdded = false;
-        try {
-            String offset = Master.getOffset();
-            String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
-                    + "join customer on appointment.customerId = customer.customerId";
-            isAdded = new MYSQL().addAppointmentsFromQuery(sql);
-            System.out.println(isAdded);
-        } catch (Exception ex) {
-            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error");
-        }
+            // Current start and end dates
+            Date cStart = dateFormat.parse(cStartString);
+            Date cEnd = dateFormat.parse(cEndString);
+
+            // Instant
+            Instant ciStart = cStart.toInstant();
+            Instant ciEnd = cEnd.toInstant();
+
+            if (title.equals(Master.getAppointment(a).getTitle())) {
+                System.out.println("Same, Michael.");
+            } else if (!((iStart.isBefore(ciStart) && (iEnd.isBefore(ciStart) || iEnd.equals(ciStart)))  // B
+                    || ((iStart.isAfter(ciEnd) || iStart.equals(ciEnd)) && iEnd.isAfter(ciEnd)) // C
+                    )) {
+                
+        /*
+                        [ciStart -A-  ciEnd]
+        [iStart -B- iEnd]                  [iStart  -C-  iEnd]  
+                
+        */
+
+                isOverlappingAppointment = true;
+                overlappingAppointmentTitle = Master.getAppointment(a).getTitle();
+                System.out.println("Appointment overlaps with ... " + overlappingAppointmentTitle + " " + Master.getAppointment(a).getStart() + " - " + Master.getAppointment(a).getEnd());
+
+            }
+            a++;
+
+        } // while
+
+        if (isOverlappingAppointment) {
+            // ALERT
+            String ti = "Warning";
+            String header = "Overlapping Appointment";
+            String content = "That appointment overlaps with another appointment " + overlappingAppointmentTitle;
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(ti);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+
+            Image image = new Image("/Model/calendarWarning.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+            System.out.println("Invalid Appointment");
+
+        } else {
+
+            // Outside business hours warning
+            if (((((!s.equals(beginningOfDay) && !s.after(beginningOfDay) || !s.before(endOfDay)) || (!e.equals(beginningOfDay) && !e.after(beginningOfDay))) || (!e.equals(endOfDay) && !e.before(endOfDay))) || s.equals(e)) || e.before(s)) {
+                // ALERT
+                String t = "Warning";
+                String header = "Check Appointment Time";
+                String content = "That appointment is outside business hours or an invalid time.";
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(t);
+                alert.setHeaderText(header);
+                alert.setContentText(content);
+
+                Image image = new Image("/Model/calendarWarning.png");
+                ImageView imageView = new ImageView(image);
+                alert.setGraphic(imageView);
+                alert.showAndWait();
+                System.out.println("Invalid Appointment");
+            } else {
+
+                // INSERT into MySQL
+                boolean result = false;
+
+                try {
+                    CallableStatement cs = null;
+                    String q = "{call UpdateAppointment(?,?,?,?,?,?,?,?,?,?,?)}";
+                    Connection conn = DBConnection.getConnection();
+                    cs = conn.prepareCall(q);
+                    cs.setString(1, title);
+                    cs.setString(2, description);
+                    cs.setString(3, type);
+                    cs.setString(4, customer);
+                    cs.setString(5, contact);
+                    cs.setString(6, location);
+                    cs.setString(7, start);
+                    cs.setString(8, end);
+                    cs.setString(9, url);
+                    cs.setInt(10, appointmentId);
+                    cs.setString(11, Master.getOffset());  // updated 7/24 in DB and here.
+
+                    cs.executeQuery();
+                    conn.close();
+
+                    System.out.println("Query Complete");
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex);
+                }
+
+                //Clears old appointmentTableView
+                Master.deleteAllAppointments();
+
+                // Populate Appointment TableView from Query
+                boolean isAdded = false;
+                try {
+                    String offset = Master.getOffset();
+                    String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
+                            + "join customer on appointment.customerId = customer.customerId";
+                    isAdded = new MYSQL().addAppointmentsFromQuery(sql);
+                    System.out.println(isAdded);
+                } catch (Exception ex) {
+                    Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("Error");
+                }// end catch
+
+                System.out.println("Valid Appointment");
+            }// end else is during business hours
+        }// end else is overlapping appointment
 
     }
 
