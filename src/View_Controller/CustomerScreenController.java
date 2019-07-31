@@ -25,12 +25,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -132,14 +135,15 @@ public class CustomerScreenController implements Initializable {
             System.out.println("Error");
         }
 
-        customerNameTextField.setText("Brian Schaffeld");
-        activeRadioButton.selectedProperty().set(true);
-        addressTextField.setText("4129 Winners Circle Ave SE");
-        address2TextField.setText("");
-        cityTextField.setText("Albany");
-        countryTextField.setText("USA");
-        postalCodeTextField.setText("97322");
-        phoneTextField.setText("5419086580");
+        // TODO -- deelete dummy values- Customer
+//        customerNameTextField.setText("Brian Schaffeld");
+//        activeRadioButton.selectedProperty().set(true);
+//        addressTextField.setText("4129 Winners Circle Ave SE");
+//        address2TextField.setText("");
+//        cityTextField.setText("Albany");
+//        countryTextField.setText("USA");
+//        postalCodeTextField.setText("97322");
+//        phoneTextField.setText("5419086580");
 
         // Cleans out customer list so that the query can re-populate it
         Master.deleteAllCustomers();
@@ -170,9 +174,8 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private void addButtonAction(ActionEvent event) throws IOException, SQLException, Exception {
-        //TODO-- add textfield values to database, update tableview, then go to mainscreen
-        //TODO-- make getting all information a function then pass that to whatever callable statement you need
-
+        //add textfield values to database, update tableview, then go to mainscreen
+        
         String cu = customerNameTextField.getText();
 
         int ac = 0;
@@ -187,7 +190,34 @@ public class CustomerScreenController implements Initializable {
         String co = countryTextField.getText();
         String po = postalCodeTextField.getText();
         String ph = phoneTextField.getText();
+        
+        ArrayList<String> customerFields = new ArrayList();
+        customerFields.add(cu);
+        customerFields.add(ad);
+       //  customerFields.add(ad2);  // not required
+        customerFields.add(ci);
+        customerFields.add(co);
+        customerFields.add(po);
+        customerFields.add(ph);
+        
+        if(customerFields.contains(null)){
+            // ALERT
+            String ti = "Error";
+            String header = "Invalid Data";
+            String content = "Please enter a value for each field on the left.";
 
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(ti);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+
+            Image image = new Image("/Model/invisible.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+            System.out.println("Invalid Customer Data");
+        } 
+        else{
         boolean result = false;
         try {
             CallableStatement cs = null;
@@ -222,6 +252,8 @@ public class CustomerScreenController implements Initializable {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        }
+        
     }
 
     @FXML
@@ -240,6 +272,7 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private void tableViewSelectionAction() {
+        try{
         Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
 
         customerIdTextField.setText(selectedCustomer.getCustomerId());
@@ -257,6 +290,24 @@ public class CustomerScreenController implements Initializable {
         countryTextField.setText(selectedCustomer.getCountry());
         postalCodeTextField.setText(selectedCustomer.getPostalCode());
         phoneTextField.setText(selectedCustomer.getPhone());
+        } // Null selectedAppointment exception
+        catch (Exception e) {
+            // ALERT
+            String ti = "Error";
+            String header = "No Customer Selected";
+            String content = "Please select a valid customer from the table on the right.";
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(ti);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+
+            Image image = new Image("/Model/invisible.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+            System.out.println("Invalid Customer Selected");
+        }
     }
 
     @FXML
@@ -277,7 +328,34 @@ public class CustomerScreenController implements Initializable {
         String co = countryTextField.getText();
         String po = postalCodeTextField.getText();
         String ph = phoneTextField.getText();
+        
+        ArrayList<String> customerFields = new ArrayList();
+        customerFields.add(cu);
+        customerFields.add(ad);
+       //  customerFields.add(ad2);  // not required
+        customerFields.add(ci);
+        customerFields.add(co);
+        customerFields.add(po);
+        customerFields.add(ph);
+        
+        if(customerFields.contains("") || customerFields.contains(null)){
+            // ALERT
+            String ti = "Error";
+            String header = "Invalid Data";
+            String content = "Please enter a value for each field on the left.";
 
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(ti);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+
+            Image image = new Image("/Model/invisible.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+            System.out.println("Invalid Customer Data");
+        } 
+        else{
         boolean result = false;
         try {
             CallableStatement cs = null;
@@ -315,7 +393,7 @@ public class CustomerScreenController implements Initializable {
             Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
-
+        }// end else if not null
     }
 
     @FXML
@@ -355,16 +433,28 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private void clearButtonAction() {
-        customerIdTextField.setText(null);
-
-        customerNameTextField.setText(null);
+        ArrayList customerFieldList = new ArrayList();
+        customerFieldList.add(customerIdTextField);
+        customerFieldList.add(customerNameTextField);
+        customerFieldList.add(addressTextField);
+        customerFieldList.add(address2TextField);
+        customerFieldList.add(cityTextField);
+        customerFieldList.add(countryTextField);
+        customerFieldList.add(postalCodeTextField);
+        customerFieldList.add(phoneTextField);
+        
+        //Lambda expression
+        // I used this Lambda expression because I was doing the same operation
+        // for each field in the form.  I used a method and passed in 
+        // each TextField so that I could perform the operations without
+        // extra work.
+        customerFieldList.forEach( f -> setNull((TextField) f));
         activeRadioButton.setSelected(false);
-        addressTextField.setText(null);
-        address2TextField.setText(null);
-        cityTextField.setText(null);
-        countryTextField.setText(null);
-        postalCodeTextField.setText(null);
-        phoneTextField.setText(null);
+        
+    }
+    
+    private void setNull(TextField t){
+        t.setText(null);
     }
 
 }

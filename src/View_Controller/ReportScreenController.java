@@ -46,7 +46,6 @@ public class ReportScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
 
         reportChoiceBox.getItems().addAll(
                 "Appointments Per Month",

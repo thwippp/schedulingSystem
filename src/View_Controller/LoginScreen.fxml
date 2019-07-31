@@ -24,9 +24,9 @@
                             </font>
                         </Text>
                         <Separator focusTraversable="false" orientation="VERTICAL" visible="false" VBox.vgrow="NEVER" />
-                        <Label text="Username" />
+                        <Label fx:id="usernameLabel" text="Username" />
                         <TextField fx:id="usernameTextField" alignment="CENTER" promptText="Enter username" />
-                        <Label text="Password" />
+                        <Label fx:id="passwordLabel" text="Password" />
                         <PasswordField fx:id="passwordPasswordField" alignment="CENTER" onAction="#loginButtonAction" promptText="Enter password" />
                         <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" text="Log In" />
                     </children>

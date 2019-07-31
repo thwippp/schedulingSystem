@@ -30,6 +30,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -48,38 +51,40 @@ public class LoginScreenController implements Initializable {
     private Text loginText;
 
     @FXML
+    private Label usernameLabel;
+    
+    @FXML
     private TextField usernameTextField;
+    
+    @FXML
+    private Label passwordLabel;
 
     @FXML
     private PasswordField passwordPasswordField;
 
     @FXML
     private Button loginButton;
-
-// TODO Language/ resource bundle stuff    
-
-    
-    
+ 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO delete dummy values
-        usernameTextField.setText("test");
-        passwordPasswordField.setText("test");
+        // TODO delete dummy values-- login
+//        usernameTextField.setText("test");
+//        passwordPasswordField.setText("test");
 
         //Locale
         Locale locale = Locale.getDefault();
         System.out.println(locale);
 
-        // TODO language/ resource bundle
-        // System.out.println(bundle.getString("logIn"));
-       
-            ResourceBundle bundle = ResourceBundle.getBundle("Language/language", Locale.getDefault());  // Is this how I get the user's Region/Language from the OS/JVM?  Where is that set in Windows?
-            loginText.setText("hello");
-            loginText.setText(bundle.getString("logIn"));
-
+        // Change UI based on Locale/ Language
+        ResourceBundle bundle = ResourceBundle.getBundle("Language/language", Locale.getDefault());
+        loginText.setText(bundle.getString("logIn"));
+        usernameLabel.setText(bundle.getString("username"));
+        passwordLabel.setText(bundle.getString("password"));
+        loginButton.setText(bundle.getString("loginButton"));
+        
     }
 
     @FXML
@@ -98,6 +103,10 @@ public class LoginScreenController implements Initializable {
         }
         log.setLevel(Level.INFO);  // adjust logging level
 
+        // Set Locale / Language
+        ResourceBundle bundle = ResourceBundle.getBundle("Language/language", Locale.getDefault());
+
+        
         // Set timezone for user based on timezone in OS
         DateAndTime dt = new DateAndTime();
         dt.setLocalZoneId(ZoneId.systemDefault());
@@ -136,17 +145,17 @@ public class LoginScreenController implements Initializable {
 
         if (!isValidUser) {
             // ALERT
-            String title = "Error";
-            String header = "Invalid User";
-            String content = "Sorry. I can't find that user in the database.  Please try again.";
+            String title = bundle.getString("errorTitle");
+            String header = bundle.getString("errorHeader");
+            String content = bundle.getString("errorContent");
 
-            // TODO-- Change error text... 2 languages... based on location
-            //"Sorry. The Username and Password don't match."
-            // "Lo siento. El nombre de usuario y la contraseña no coinciden."
+            ButtonType okButton = new ButtonType(bundle.getString("okButton"), ButtonBar.ButtonData.OK_DONE);
+            
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(title);
             alert.setHeaderText(header);
             alert.setContentText(content);
+            
 
             Image image = new Image("/Model/invisible.png");
             ImageView imageView = new ImageView(image);
