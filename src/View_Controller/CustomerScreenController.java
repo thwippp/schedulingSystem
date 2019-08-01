@@ -227,11 +227,11 @@ public class CustomerScreenController implements Initializable {
                 cs.setString(3, ad);
                 cs.setString(4, ad2);
                 cs.setString(5, ci);
-                cs.setString(6, co);
+                cs.setString(6, co);  // could change this to Master.getUser();
                 cs.setString(7, po);
                 cs.setString(8, ph);
 
-                cs.executeQuery();  // could change this
+                cs.executeQuery();
                 conn.close();
 
             } catch (SQLException ex) {
@@ -368,9 +368,9 @@ public class CustomerScreenController implements Initializable {
                 cs.setString(7, co);
                 cs.setString(8, po);
                 cs.setString(9, ph);
-                cs.setString(10, Master.getUser());
+                cs.setString(10, Master.getUser());  // gets current user of program
 
-                cs.executeQuery();  // could change this
+                cs.executeQuery();
                 conn.close();
 
             } catch (SQLException ex) {
@@ -405,7 +405,7 @@ public class CustomerScreenController implements Initializable {
             cs = conn.prepareCall(q);
             cs.setString(1, String.valueOf(customerIdTextField.getText()));
 
-            cs.executeQuery();  // could change this
+            cs.executeQuery();
             conn.close();
 
         } catch (SQLException ex) {

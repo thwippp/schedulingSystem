@@ -574,7 +574,7 @@ public class AppointmentScreenController implements Initializable {
                         cs.setString(1, title);
                         cs.setString(2, description);
                         cs.setString(3, type);
-                        cs.setString(4, customer);
+                        cs.setString(4, customer);  // could change this to Master.getUser();
                         cs.setString(5, contact);
                         cs.setString(6, location);
                         cs.setString(7, start);
@@ -785,7 +785,7 @@ public class AppointmentScreenController implements Initializable {
                         cs.setString(2, description);
                         cs.setString(3, type);
                         cs.setString(4, customer);
-                        cs.setString(5, contact);
+                        cs.setString(5, contact);  // could change this to Master.getUser();
                         cs.setString(6, location);
                         cs.setString(7, start);
                         cs.setString(8, end);
