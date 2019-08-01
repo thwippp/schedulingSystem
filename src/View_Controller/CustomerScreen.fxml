@@ -33,7 +33,7 @@
                                 </Text>
                                 <Separator focusTraversable="false" orientation="VERTICAL" visible="false" />
                                 <Label text="Customer Id" />
-                                <TextField fx:id="customerIdTextField" alignment="CENTER" promptText="Customer Id" />
+                                <TextField fx:id="customerIdTextField" alignment="CENTER" editable="false" promptText="Customer Id" />
                                 <Label text="Customer Name" />
                                 <TextField fx:id="customerNameTextField" alignment="CENTER" promptText="Customer Name" />
                                 <RadioButton fx:id="activeRadioButton" mnemonicParsing="false" text="Active Customer" />

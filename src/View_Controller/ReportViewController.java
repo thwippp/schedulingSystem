@@ -27,22 +27,21 @@ public class ReportViewController implements Initializable {
 
     @FXML
     private TextArea reportViewTextArea;
-    
+
     @FXML
     private Button backButton;
 
-
-    public void setReport(String reportText){
+    public void setReport(String reportText) {
         reportViewTextArea.setText(reportText);
     }
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    }    
-    
+    }
+
     @FXML
     public void backButtonAction(ActionEvent event) throws IOException {
         // Switch scene to MainScreen
@@ -57,5 +56,5 @@ public class ReportViewController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    
+
 }

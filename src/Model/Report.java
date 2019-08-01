@@ -10,7 +10,7 @@ package Model;
  * @author bscha
  */
 public class Report {
-    
+
     private String reportText;
 
     public Report(String reportText) {
@@ -24,9 +24,5 @@ public class Report {
     public void setReportText(String reportText) {
         this.reportText = reportText;
     }
-    
-    
-    
-    
-    
+
 }

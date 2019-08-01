@@ -22,12 +22,12 @@ public class DateAndTime {
     private static ZonedDateTime localZonedDateTime;
     private static ZonedDateTime utcDateTime;
 
-    public DateAndTime(){
-        
+    public DateAndTime() {
+
     }
-    
+
     public DateAndTime(ZoneId z) {
-        DateAndTime. setLocalZoneId(z);
+        DateAndTime.setLocalZoneId(z);
     }
 
     public static Timestamp localToUTCTS(Timestamp localTimestamp) {
@@ -35,7 +35,7 @@ public class DateAndTime {
     }
 
     public static Timestamp UTCToLocalTS(Timestamp UTCTimestamp) {
-        
+
         return null;
     }
 

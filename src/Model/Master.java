@@ -16,6 +16,7 @@ public class Master {
 
     public static String user;
     public static String offset;
+    public static Double loading;
 
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
@@ -23,7 +24,8 @@ public class Master {
     public static ObservableList<Appointment> getAllAppointments() {
         return allAppointments;
     }
-    public static Appointment getAppointment(int appointment){
+
+    public static Appointment getAppointment(int appointment) {
         return allAppointments.get(appointment);
     }
 
@@ -42,8 +44,8 @@ public class Master {
     public static void deleteAllAppointments() {
         allAppointments.clear();
     }
-    
-     public static String getOffset() {
+
+    public static String getOffset() {
         return offset;
     }
 
@@ -77,6 +79,14 @@ public class Master {
 
     public static void setAllCustomers(ObservableList<Customer> allCustomers) {
         Master.allCustomers = allCustomers;
+    }
+
+    public static Double getLoading() {
+        return loading;
+    }
+
+    public static void setLoading(Double loading) {
+        Master.loading = loading;
     }
 
 }

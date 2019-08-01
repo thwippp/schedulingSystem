@@ -1,0 +1,40 @@
+Jul 31, 2019 7:59:10 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:03:12 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:03:41 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:05:23 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:06:30 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:16:59 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:20:57 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:22:26 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:30:09 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:32:51 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:43:37 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:44:41 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:45:34 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 8:51:49 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 9:01:02 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 9:02:29 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 9:03:01 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 9:04:27 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 9:08:17 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.
+Jul 31, 2019 9:10:18 PM View_Controller.LoginScreenController loginButtonAction
+INFO: User "test" has logged in.

@@ -52,10 +52,10 @@ public class LoginScreenController implements Initializable {
 
     @FXML
     private Label usernameLabel;
-    
+
     @FXML
     private TextField usernameTextField;
-    
+
     @FXML
     private Label passwordLabel;
 
@@ -64,7 +64,7 @@ public class LoginScreenController implements Initializable {
 
     @FXML
     private Button loginButton;
- 
+
     /**
      * Initializes the controller class.
      */
@@ -84,7 +84,7 @@ public class LoginScreenController implements Initializable {
         usernameLabel.setText(bundle.getString("username"));
         passwordLabel.setText(bundle.getString("password"));
         loginButton.setText(bundle.getString("loginButton"));
-        
+
     }
 
     @FXML
@@ -106,7 +106,6 @@ public class LoginScreenController implements Initializable {
         // Set Locale / Language
         ResourceBundle bundle = ResourceBundle.getBundle("Language/language", Locale.getDefault());
 
-        
         // Set timezone for user based on timezone in OS
         DateAndTime dt = new DateAndTime();
         dt.setLocalZoneId(ZoneId.systemDefault());
@@ -150,12 +149,11 @@ public class LoginScreenController implements Initializable {
             String content = bundle.getString("errorContent");
 
             ButtonType okButton = new ButtonType(bundle.getString("okButton"), ButtonBar.ButtonData.OK_DONE);
-            
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(title);
             alert.setHeaderText(header);
             alert.setContentText(content);
-            
 
             Image image = new Image("/Model/invisible.png");
             ImageView imageView = new ImageView(image);

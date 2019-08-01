@@ -77,7 +77,7 @@ public class MYSQL {
                 for (int i = 0; i < rsCols; i++) {
                     row.add(rs.getString(i + 1));
                 }
-                
+
                 Master.addAppointment(new Appointment(row));
             }
 
@@ -136,7 +136,7 @@ public class MYSQL {
 
         return table;
     }
-    
+
     public static int getColumnCount(ResultSet resultSet) throws SQLException {
         return resultSet.getMetaData().getColumnCount();
     }
@@ -153,5 +153,5 @@ public class MYSQL {
         }
         return size;
     }
-    
+
 }

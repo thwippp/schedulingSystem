@@ -103,9 +103,9 @@ public class ReportScreenController implements Initializable {
                     + "        `customer`.`customerName` AS `customerName`,\n"
                     + "        `appointment`.`contact` AS `contact`,\n"
                     + "        `appointment`.`location` AS `location`,\n"
-                    + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','"+ offset +"'), '%m-%d-%Y') AS `date`,\n"
-                    + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','"+ offset +"'), '%H:%i') AS `start`,\n"
-                    + "        DATE_FORMAT(convert_tz(`appointment`.`end`,'+0:00','"+ offset +"'), '%H:%i') AS `end`\n"
+                    + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','" + offset + "'), '%m-%d-%Y') AS `date`,\n"
+                    + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','" + offset + "'), '%H:%i') AS `start`,\n"
+                    + "        DATE_FORMAT(convert_tz(`appointment`.`end`,'+0:00','" + offset + "'), '%H:%i') AS `end`\n"
                     + "    FROM\n"
                     + "        (`appointment`\n"
                     + "        JOIN `customer` ON ((`appointment`.`customerId` = `customer`.`customerId`))))";

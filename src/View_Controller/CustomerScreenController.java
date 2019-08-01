@@ -126,7 +126,7 @@ public class CustomerScreenController implements Initializable {
             String sql = "SELECT Auto_increment FROM information_schema.tables WHERE table_name='customer'";
             result = new MYSQL().query(sql);
 
-            String cId = result.get(0).get(0).toString();  // maybe not
+            String cId = result.get(0).get(0).toString();
             customerIdTextField.setText(cId);
 
             System.out.println(result);
@@ -144,7 +144,6 @@ public class CustomerScreenController implements Initializable {
 //        countryTextField.setText("USA");
 //        postalCodeTextField.setText("97322");
 //        phoneTextField.setText("5419086580");
-
         // Cleans out customer list so that the query can re-populate it
         Master.deleteAllCustomers();
 
@@ -175,7 +174,7 @@ public class CustomerScreenController implements Initializable {
     @FXML
     private void addButtonAction(ActionEvent event) throws IOException, SQLException, Exception {
         //add textfield values to database, update tableview, then go to mainscreen
-        
+
         String cu = customerNameTextField.getText();
 
         int ac = 0;
@@ -190,17 +189,17 @@ public class CustomerScreenController implements Initializable {
         String co = countryTextField.getText();
         String po = postalCodeTextField.getText();
         String ph = phoneTextField.getText();
-        
+
         ArrayList<String> customerFields = new ArrayList();
         customerFields.add(cu);
         customerFields.add(ad);
-       //  customerFields.add(ad2);  // not required
+        //  customerFields.add(ad2);  // not required
         customerFields.add(ci);
         customerFields.add(co);
         customerFields.add(po);
         customerFields.add(ph);
-        
-        if(customerFields.contains(null)){
+
+        if (customerFields.contains(null)) {
             // ALERT
             String ti = "Error";
             String header = "Invalid Data";
@@ -216,44 +215,43 @@ public class CustomerScreenController implements Initializable {
             alert.setGraphic(imageView);
             alert.showAndWait();
             System.out.println("Invalid Customer Data");
-        } 
-        else{
-        boolean result = false;
-        try {
-            CallableStatement cs = null;
-            String q = "{Call InsertCustomer(?,?,?,?,?,?,?,?)}";
-            Connection conn = DBConnection.getConnection();
-            cs = conn.prepareCall(q);
-            cs.setString(1, cu);
-            cs.setBoolean(2, acrb);
-            cs.setString(3, ad);
-            cs.setString(4, ad2);
-            cs.setString(5, ci);
-            cs.setString(6, co);
-            cs.setString(7, po);
-            cs.setString(8, ph);
+        } else {
+            boolean result = false;
+            try {
+                CallableStatement cs = null;
+                String q = "{Call InsertCustomer(?,?,?,?,?,?,?,?)}";
+                Connection conn = DBConnection.getConnection();
+                cs = conn.prepareCall(q);
+                cs.setString(1, cu);
+                cs.setBoolean(2, acrb);
+                cs.setString(3, ad);
+                cs.setString(4, ad2);
+                cs.setString(5, ci);
+                cs.setString(6, co);
+                cs.setString(7, po);
+                cs.setString(8, ph);
 
-            cs.executeQuery();  // could change this
-            conn.close();
+                cs.executeQuery();  // could change this
+                conn.close();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println(ex);
+            }
+
+            // Go to MainScreen
+            Stage stage;
+            Parent root;
+            stage = (Stage) addButton.getScene().getWindow();
+            //load up OTHER FXML document
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/View_Controller/MainScreen.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
         }
 
-        // Go to MainScreen
-        Stage stage;
-        Parent root;
-        stage = (Stage) addButton.getScene().getWindow();
-        //load up OTHER FXML document
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/View_Controller/MainScreen.fxml"));
-        root = loader.load();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        }
-        
     }
 
     @FXML
@@ -272,24 +270,24 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private void tableViewSelectionAction() {
-        try{
-        Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+        try {
+            Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
 
-        customerIdTextField.setText(selectedCustomer.getCustomerId());
+            customerIdTextField.setText(selectedCustomer.getCustomerId());
 
-        customerNameTextField.setText(selectedCustomer.getCustomerName());
-        boolean active;
-        int a = Integer.valueOf(selectedCustomer.isActive());
-        active = a > 0;
+            customerNameTextField.setText(selectedCustomer.getCustomerName());
+            boolean active;
+            int a = Integer.valueOf(selectedCustomer.isActive());
+            active = a > 0;
 //        System.out.println(a);
 
-        activeRadioButton.setSelected(active);
-        addressTextField.setText(selectedCustomer.getAddress());
-        address2TextField.setText(selectedCustomer.getAddress2());
-        cityTextField.setText(selectedCustomer.getCity());
-        countryTextField.setText(selectedCustomer.getCountry());
-        postalCodeTextField.setText(selectedCustomer.getPostalCode());
-        phoneTextField.setText(selectedCustomer.getPhone());
+            activeRadioButton.setSelected(active);
+            addressTextField.setText(selectedCustomer.getAddress());
+            address2TextField.setText(selectedCustomer.getAddress2());
+            cityTextField.setText(selectedCustomer.getCity());
+            countryTextField.setText(selectedCustomer.getCountry());
+            postalCodeTextField.setText(selectedCustomer.getPostalCode());
+            phoneTextField.setText(selectedCustomer.getPhone());
         } // Null selectedAppointment exception
         catch (Exception e) {
             // ALERT
@@ -328,17 +326,17 @@ public class CustomerScreenController implements Initializable {
         String co = countryTextField.getText();
         String po = postalCodeTextField.getText();
         String ph = phoneTextField.getText();
-        
+
         ArrayList<String> customerFields = new ArrayList();
         customerFields.add(cu);
         customerFields.add(ad);
-       //  customerFields.add(ad2);  // not required
+        //  customerFields.add(ad2);  // not required
         customerFields.add(ci);
         customerFields.add(co);
         customerFields.add(po);
         customerFields.add(ph);
-        
-        if(customerFields.contains("") || customerFields.contains(null)){
+
+        if (customerFields.contains("") || customerFields.contains(null)) {
             // ALERT
             String ti = "Error";
             String header = "Invalid Data";
@@ -354,45 +352,44 @@ public class CustomerScreenController implements Initializable {
             alert.setGraphic(imageView);
             alert.showAndWait();
             System.out.println("Invalid Customer Data");
-        } 
-        else{
-        boolean result = false;
-        try {
-            CallableStatement cs = null;
-            String q = "{Call UpdateCustomer(?,?,?,?,?,?,?,?,?,?)}";
-            Connection conn = DBConnection.getConnection();
-            cs = conn.prepareCall(q);
-            cs.setInt(1, cid);
-            cs.setString(2, cu);
-            cs.setBoolean(3, acrb);
-            cs.setString(4, ad);
-            cs.setString(5, ad2);
-            cs.setString(6, ci);
-            cs.setString(7, co);
-            cs.setString(8, po);
-            cs.setString(9, ph);
-            cs.setString(10, Master.getUser());
+        } else {
+            boolean result = false;
+            try {
+                CallableStatement cs = null;
+                String q = "{Call UpdateCustomer(?,?,?,?,?,?,?,?,?,?)}";
+                Connection conn = DBConnection.getConnection();
+                cs = conn.prepareCall(q);
+                cs.setInt(1, cid);
+                cs.setString(2, cu);
+                cs.setBoolean(3, acrb);
+                cs.setString(4, ad);
+                cs.setString(5, ad2);
+                cs.setString(6, ci);
+                cs.setString(7, co);
+                cs.setString(8, po);
+                cs.setString(9, ph);
+                cs.setString(10, Master.getUser());
 
-            cs.executeQuery();  // could change this
-            conn.close();
+                cs.executeQuery();  // could change this
+                conn.close();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex);
-        }
+            } catch (SQLException ex) {
+                Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println(ex);
+            }
 
-        //Clears old customerTableView
-        Master.deleteAllCustomers();
+            //Clears old customerTableView
+            Master.deleteAllCustomers();
 
-        boolean isAdded = false;
-        try {
-            String sql = "Call CustomerTableView";
-            isAdded = new MYSQL().addCustomersFromQuery(sql);
-            System.out.println(isAdded);
-        } catch (Exception ex) {
-            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error");
-        }
+            boolean isAdded = false;
+            try {
+                String sql = "Call CustomerTableView";
+                isAdded = new MYSQL().addCustomersFromQuery(sql);
+                System.out.println(isAdded);
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error");
+            }
         }// end else if not null
     }
 
@@ -442,18 +439,32 @@ public class CustomerScreenController implements Initializable {
         customerFieldList.add(countryTextField);
         customerFieldList.add(postalCodeTextField);
         customerFieldList.add(phoneTextField);
-        
+
         //Lambda expression
         // I used this Lambda expression because I was doing the same operation
         // for each field in the form.  I used a method and passed in 
         // each TextField so that I could perform the operations without
         // extra work.
-        customerFieldList.forEach( f -> setNull((TextField) f));
+        customerFieldList.forEach(f -> setNull((TextField) f));
         activeRadioButton.setSelected(false);
-        
+
+        ObservableList<ArrayList> result = null;
+        try {
+            String sql = "SELECT Auto_increment FROM information_schema.tables WHERE table_name='customer'";
+            result = new MYSQL().query(sql);
+
+            String cId = result.get(0).get(0).toString();
+            customerIdTextField.setText(cId);
+
+            System.out.println(result);
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+
     }
-    
-    private void setNull(TextField t){
+
+    private void setNull(TextField t) {
         t.setText(null);
     }
 

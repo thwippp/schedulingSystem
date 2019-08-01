@@ -26,7 +26,7 @@ public class Appointment {
     private String date;
     private String start;
     private String end;
-    
+
     private String url;
 
     public Appointment(String id, String title, String description, String customer, String type, String contact, String location, String date, String start, String end, String url) {
@@ -42,7 +42,7 @@ public class Appointment {
         this.end = end;
         this.url = url;
     }
-    
+
     public Appointment(ArrayList<String> arrayList) {
         this.id = arrayList.get(0);
         this.title = arrayList.get(1);
@@ -144,7 +144,5 @@ public class Appointment {
     public void setUrl(String url) {
         this.url = url;
     }
-    
-    
 
 }
