@@ -219,7 +219,7 @@ public class CustomerScreenController implements Initializable {
             boolean result = false;
             try {
                 CallableStatement cs = null;
-                String q = "{Call InsertCustomer(?,?,?,?,?,?,?,?)}";
+                String q = "{Call InsertCustomer(?,?,?,?,?,?,?,?,?)}"; // added ?
                 Connection conn = DBConnection.getConnection();
                 cs = conn.prepareCall(q);
                 cs.setString(1, cu);
@@ -227,9 +227,10 @@ public class CustomerScreenController implements Initializable {
                 cs.setString(3, ad);
                 cs.setString(4, ad2);
                 cs.setString(5, ci);
-                cs.setString(6, co);  // could change this to Master.getUser();
+                cs.setString(6, co);
                 cs.setString(7, po);
                 cs.setString(8, ph);
+                cs.setString(9, Master.getUser()); // added Master.getUser() 
 
                 cs.executeQuery();
                 conn.close();
@@ -238,7 +239,21 @@ public class CustomerScreenController implements Initializable {
                 Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println(ex);
             }
+            
+            //Clears old customerTableView
+            Master.deleteAllCustomers();
 
+            boolean isAdded = false;
+            try {
+                String sql = "Call CustomerTableView";
+                isAdded = new MYSQL().addCustomersFromQuery(sql);
+                System.out.println(isAdded);
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error");
+            }
+            
+            /*  Don't need to go back to main screen after adding customer
             // Go to MainScreen
             Stage stage;
             Parent root;
@@ -250,6 +265,7 @@ public class CustomerScreenController implements Initializable {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
+            */
         }
 
     }

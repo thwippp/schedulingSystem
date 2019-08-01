@@ -256,6 +256,8 @@ public class AppointmentScreenController implements Initializable {
     @FXML
     private void weekViewButtonAction() {
         System.out.println("week view button action.");
+        monthDatePicker.setValue(null);
+        
         // get date
         LocalDate week = weekDatePicker.getValue();
         if (week != null) {
@@ -285,12 +287,13 @@ public class AppointmentScreenController implements Initializable {
                 System.out.println("Error");
             }
         }
-
+        weekDatePicker.setValue(null);
     }
 
     @FXML
     private void monthViewButtonAction() {
         System.out.println("month view button action.");
+        weekDatePicker.setValue(null);
         // get date
         try {
             int month = monthDatePicker.getValue().getMonthValue();
@@ -315,6 +318,7 @@ public class AppointmentScreenController implements Initializable {
         } catch (Exception e) {
             // Do nothing
         }
+        monthDatePicker.setValue(null);
     }
 
     @FXML
@@ -574,8 +578,8 @@ public class AppointmentScreenController implements Initializable {
                         cs.setString(1, title);
                         cs.setString(2, description);
                         cs.setString(3, type);
-                        cs.setString(4, customer);  // could change this to Master.getUser();
-                        cs.setString(5, contact);
+                        cs.setString(4, customer);
+                        cs.setString(5, contact);  // not current user... select this value from the list
                         cs.setString(6, location);
                         cs.setString(7, start);
                         cs.setString(8, end);
@@ -592,6 +596,22 @@ public class AppointmentScreenController implements Initializable {
 
                     System.out.println(title + description + customer + type + contact + location + dateString + start + end + url);
 
+                    //Clears old appointmentTableView
+                    Master.deleteAllAppointments();
+
+                    // Populate Appointment TableView from Query
+                    boolean isAdded = false;
+                    try {
+                        String offset = Master.getOffset();
+                        String sql = "select appointmentId, title, description, type, customerName, contact, location,  date(convert_tz(start,'+0:00','" + offset + "')) date, DATE_FORMAT(convert_tz(start,'+0:00','" + offset + "'), '%H:%i') start, DATE_FORMAT(convert_tz(end,'+0:00','" + offset + "'), '%H:%i') end, url from appointment\n"
+                                + "join customer on appointment.customerId = customer.customerId";
+                        isAdded = new MYSQL().addAppointmentsFromQuery(sql);
+                        System.out.println(isAdded);
+                    } catch (Exception ex) {
+                        Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Error");
+                    }// end catch
+                    /*
                     Stage stage;
                     Parent root;
                     stage = (Stage) addButton.getScene().getWindow();
@@ -602,6 +622,7 @@ public class AppointmentScreenController implements Initializable {
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.show();
+                     */
 
                     System.out.println("Valid Appointment");
                 }// end else is during business hours
@@ -715,7 +736,9 @@ public class AppointmentScreenController implements Initializable {
                 Instant ciStart = cStart.toInstant();
                 Instant ciEnd = cEnd.toInstant();
 
-                if (title.equals(Master.getAppointment(a).getTitle())) {
+                if (appointmentId == (Integer.valueOf(Master.getAppointment(a).getId()))) {
+
+//                if (title.equals(Master.getAppointment(a).getTitle())) {
                     System.out.println("Same, Michael.");
                 } else if (!((iStart.isBefore(ciStart) && (iEnd.isBefore(ciStart) || iEnd.equals(ciStart))) // B
                         || ((iStart.isAfter(ciEnd) || iStart.equals(ciEnd)) && iEnd.isAfter(ciEnd)) // C
@@ -785,7 +808,7 @@ public class AppointmentScreenController implements Initializable {
                         cs.setString(2, description);
                         cs.setString(3, type);
                         cs.setString(4, customer);
-                        cs.setString(5, contact);  // could change this to Master.getUser();
+                        cs.setString(5, contact);  // don't update this.  it gets the contact from the dropdown
                         cs.setString(6, location);
                         cs.setString(7, start);
                         cs.setString(8, end);
