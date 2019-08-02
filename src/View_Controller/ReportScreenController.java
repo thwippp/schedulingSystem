@@ -37,9 +37,13 @@ public class ReportScreenController implements Initializable {
     @FXML
     private ChoiceBox reportChoiceBox;
     @FXML
+    private ChoiceBox contactChoiceBox;
+    @FXML
     private Button saveButton;
     @FXML
     private Button cancelButton;
+    
+    private ArrayList<String> activeUsers = new ArrayList();
 
     /**
      * Initializes the controller class.
@@ -49,8 +53,30 @@ public class ReportScreenController implements Initializable {
 
         reportChoiceBox.getItems().addAll(
                 "Appointments Per Month",
-                "Appointments Per Consultant",
+                "Schedule Per Consultant",
                 "Appointments Per Location");
+
+        //Contact choicebox
+//        contactChoiceBox.setVisible(false);
+
+        ObservableList<ArrayList> users = FXCollections.observableArrayList();
+        try {
+            String sql = "select userName from user";
+            users = new MYSQL().query(sql);
+            int u = 0;
+
+            while (u < users.size()) {
+                String contactItem = users.get(u).get(0).toString();
+                contactChoiceBox.getItems().add(contactItem);
+                activeUsers.add(users.get(u).get(0).toString());
+                u++;
+            }
+            System.out.println(users);
+        } catch (Exception ex) {
+            Logger.getLogger(AppointmentScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error");
+        }
+
     }
 
     @FXML
@@ -73,13 +99,45 @@ public class ReportScreenController implements Initializable {
                     headers.add(r);
 
                     break;
-                case ("Appointments Per Consultant"):
-                    sql = "select contact as 'Consultant', count(contact) as 'Appointments Per Consultant' "
-                            + "from appointment "
-                            + "group by contact;";
+                case ("Schedule Per Consultant"):
+                    
+                    contactChoiceBox.setVisible(true);
+                    String contact = (String) contactChoiceBox.getValue();
+                    String whereClause = null;
+                    
+                    if(contact.equals(null) || contact.equals("")){
+                        whereClause = "WHERE contact in ("+ activeUsers.toString() +")";
+                    }
+                    else{
+                        whereClause = "WHERE contact = '" + contact + "'";
+                    }
+                    
+                    
+                    String offset = Master.getOffset();
+                    sql = "(SELECT \n"
+                            + "        `appointment`.`title` AS `title`,\n"
+                            + "        `appointment`.`description` AS `description`,\n"
+                            + "        `appointment`.`type` AS `type`,\n"
+                            + "        `customer`.`customerName` AS `customerName`,\n"
+                            + "        `appointment`.`contact` AS `contact`,\n"
+                            + "        `appointment`.`location` AS `location`,\n"
+                            + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','" + offset + "'), '%m-%d-%Y') AS `date`,\n"
+                            + "        DATE_FORMAT(convert_tz(`appointment`.`start`,'+0:00','" + offset + "'), '%H:%i') AS `start`,\n"
+                            + "        DATE_FORMAT(convert_tz(`appointment`.`end`,'+0:00','" + offset + "'), '%H:%i') AS `end`\n"
+                            + "    FROM\n"
+                            + "        (`appointment`\n"
+                            + "        JOIN `customer` ON ((`appointment`.`customerId` = `customer`.`customerId`))) "
+                            + whereClause + ")";
 
-                    r.add("Consultant");
-                    r.add("Appointments Per Consultant");
+                    r.add("Title");
+                    r.add("Description");
+                    r.add("Type");
+                    r.add("Customer Name");
+                    r.add("Contact");
+                    r.add("Location");
+                    r.add("Date");
+                    r.add("Start");
+                    r.add("End");
                     headers.add(r);
 
                     break;
@@ -94,7 +152,6 @@ public class ReportScreenController implements Initializable {
                     break;
             }
         } catch (Exception e) {
-//            sql = "select * from AppointmentTableView";  // CHANGEME
             String offset = Master.getOffset();
             sql = "(SELECT \n"
                     + "        `appointment`.`title` AS `title`,\n"

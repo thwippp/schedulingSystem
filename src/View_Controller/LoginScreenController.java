@@ -84,6 +84,37 @@ public class LoginScreenController implements Initializable {
         usernameLabel.setText(bundle.getString("username"));
         passwordLabel.setText(bundle.getString("password"));
         loginButton.setText(bundle.getString("loginButton"));
+        
+        ObservableList<ArrayList> fifteenMin = null;
+            try {
+                String sql = "call FifteenMinuteWarning";
+                fifteenMin = new MYSQL().query(sql);
+                System.out.println(fifteenMin);
+            } catch (Exception ex) {
+                Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error");
+            }
+
+            boolean isAppointmentInFifteen;
+            isAppointmentInFifteen = fifteenMin.size() > 0;
+
+            if (isAppointmentInFifteen) {
+                // ALERT
+                String title = bundle.getString("warningTitle");
+                String header = bundle.getString("warningHeader");
+                String content = null;
+                content = bundle.getString("thereIsA") + fifteenMin.get(0).get(1).toString() + bundle.getString("appointmentWith") + fifteenMin.get(0).get(2).toString() + bundle.getString("called") + fifteenMin.get(0).get(3).toString() + bundle.getString("in") + fifteenMin.get(0).get(0).toString() + bundle.getString("minutes");
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(title);
+                alert.setHeaderText(header);
+                alert.setContentText(content);
+
+                Image image = new Image("/Model/calendarWarning.png");
+                ImageView imageView = new ImageView(image);
+                alert.setGraphic(imageView);
+                alert.showAndWait();
+            }
 
     }
 
@@ -163,36 +194,36 @@ public class LoginScreenController implements Initializable {
         } // end if invald user
         else {
 
-            ObservableList<ArrayList> fifteenMin = null;
-            try {
-                String sql = "call FifteenMinuteWarning";
-                fifteenMin = new MYSQL().query(sql);
-                System.out.println(fifteenMin);
-            } catch (Exception ex) {
-                Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Error");
-            }
-
-            boolean isAppointmentInFifteen;
-            isAppointmentInFifteen = fifteenMin.size() > 0;
-
-            if (isAppointmentInFifteen) {
-                // ALERT
-                String title = "Warning";
-                String header = "15 Minute Warning";
-                String content = null;
-                content = "There is a " + fifteenMin.get(0).get(1).toString() + " appointment with " + fifteenMin.get(0).get(2).toString() + " called " + fifteenMin.get(0).get(3).toString() + " in " + fifteenMin.get(0).get(0).toString() + " minute(s).";
-
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle(title);
-                alert.setHeaderText(header);
-                alert.setContentText(content);
-
-                Image image = new Image("/Model/calendarWarning.png");
-                ImageView imageView = new ImageView(image);
-                alert.setGraphic(imageView);
-                alert.showAndWait();
-            }/* end if appointment is scheduled within 15 minutes*/  //else {
+//            ObservableList<ArrayList> fifteenMin = null;
+//            try {
+//                String sql = "call FifteenMinuteWarning";
+//                fifteenMin = new MYSQL().query(sql);
+//                System.out.println(fifteenMin);
+//            } catch (Exception ex) {
+//                Logger.getLogger(LoginScreenController.class.getName()).log(Level.SEVERE, null, ex);
+//                System.out.println("Error");
+//            }
+//
+//            boolean isAppointmentInFifteen;
+//            isAppointmentInFifteen = fifteenMin.size() > 0;
+//
+//            if (isAppointmentInFifteen) {
+//                // ALERT
+//                String title = "Warning";
+//                String header = "15 Minute Warning";
+//                String content = null;
+//                content = "There is a " + fifteenMin.get(0).get(1).toString() + " appointment with " + fifteenMin.get(0).get(2).toString() + " called " + fifteenMin.get(0).get(3).toString() + " in " + fifteenMin.get(0).get(0).toString() + " minute(s).";
+//
+//                Alert alert = new Alert(Alert.AlertType.WARNING);
+//                alert.setTitle(title);
+//                alert.setHeaderText(header);
+//                alert.setContentText(content);
+//
+//                Image image = new Image("/Model/calendarWarning.png");
+//                ImageView imageView = new ImageView(image);
+//                alert.setGraphic(imageView);
+//                alert.showAndWait();
+//            }/* end if appointment is scheduled within 15 minutes*/  //else {
             // Set Master User
             Master.setUser(username);
 

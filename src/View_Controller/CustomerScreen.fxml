@@ -58,11 +58,11 @@
                                         <VBox spacing="5.0">
                                             <children>
                                                 <Label text="Country" />
-                                                <TextField fx:id="countryTextField" alignment="CENTER" promptText="Country" />
+                                                <TextField fx:id="countryTextField" alignment="CENTER" promptText="USA or GB" />
                                                 <Label text="Postal Code" />
                                                 <TextField fx:id="postalCodeTextField" alignment="CENTER" promptText="Postal Code" />
                                                 <Label text="Phone" />
-                                                <TextField fx:id="phoneTextField" alignment="CENTER" promptText="Phone" />
+                                                <TextField fx:id="phoneTextField" alignment="CENTER" promptText="Phone (Numbers only)" />
                                             </children>
                                             <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

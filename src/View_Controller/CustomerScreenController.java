@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -135,7 +137,7 @@ public class CustomerScreenController implements Initializable {
             System.out.println("Error");
         }
 
-        // TODO -- deelete dummy values- Customer
+        // TODO -- delete dummy values- Customer
 //        customerNameTextField.setText("Brian Schaffeld");
 //        activeRadioButton.selectedProperty().set(true);
 //        addressTextField.setText("4129 Winners Circle Ave SE");
@@ -189,7 +191,7 @@ public class CustomerScreenController implements Initializable {
         String co = countryTextField.getText();
         String po = postalCodeTextField.getText();
         String ph = phoneTextField.getText();
-
+        
         ArrayList<String> customerFields = new ArrayList();
         customerFields.add(cu);
         customerFields.add(ad);
@@ -198,8 +200,14 @@ public class CustomerScreenController implements Initializable {
         customerFields.add(co);
         customerFields.add(po);
         customerFields.add(ph);
+        
+        // Only USA and GB (not THAT international)
+        boolean isValidCountry = Pattern.matches("USA|GB",co.toUpperCase());
+        
+        // Only numbers entered for phone?
+        boolean isPhoneJustNumbers = Pattern.matches("[0-9]+",ph);
 
-        if (customerFields.contains(null)) {
+        if (customerFields.contains(null) || !isValidCountry || !isPhoneJustNumbers) {
             // ALERT
             String ti = "Error";
             String header = "Invalid Data";
